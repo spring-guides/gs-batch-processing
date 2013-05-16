@@ -35,24 +35,6 @@ import org.springframework.jdbc.core.RowMapper;
 @EnableAutoConfiguration
 public class BatchConfiguration {
 
-	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
-		List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
-			@Override
-			public Person mapRow(ResultSet rs, int row) throws SQLException {
-				return new Person(rs.getString(1), rs.getString(2));
-			}
-		});
-		for (Person person : results) {
-			System.out.println("Found <" + person + "> in the database.");
-		}
-	}
-
-	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new JdbcTemplate(dataSource);
-	}
-
 	@Bean
 	public ItemReader<Person> reader() {
 		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
@@ -100,6 +82,24 @@ public class BatchConfiguration {
 				.processor(processor)
 				.writer(writer)
 				.build();
+	}
+
+	@Bean
+	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
+	}
+
+	public static void main(String[] args) {
+		ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
+		List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
+			@Override
+			public Person mapRow(ResultSet rs, int row) throws SQLException {
+				return new Person(rs.getString(1), rs.getString(2));
+			}
+		});
+		for (Person person : results) {
+			System.out.println("Found <" + person + "> in the database.");
+		}
 	}
 
 }
