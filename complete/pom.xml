@@ -43,6 +43,11 @@
 			<url>http://repo.springsource.org/snapshot</url>
 			<snapshots><enabled>true</enabled></snapshots>
 		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>http://repo.springsource.org/milestone</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>

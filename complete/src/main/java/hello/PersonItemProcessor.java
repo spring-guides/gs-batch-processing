@@ -29,9 +29,7 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
         final String firstName = person.getFirstName().toUpperCase();
         final String lastName = person.getLastName().toUpperCase();
         
-        final Person transformedPerson = new Person();
-        transformedPerson.setFirstName(firstName);
-        transformedPerson.setLastName(lastName);
+        final Person transformedPerson = new Person(firstName, lastName);
 
         System.out.println("Converting (" + person + ") into (" + transformedPerson + ")");
         

@@ -1,5 +1,9 @@
 package hello;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
@@ -19,10 +23,12 @@ import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.bootstrap.SpringApplication;
 import org.springframework.bootstrap.context.annotation.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 @Configuration
 @EnableBatchProcessing
@@ -30,7 +36,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class BatchConfiguration {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BatchConfiguration.class, args);
+		ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
+		List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
+			@Override
+			public Person mapRow(ResultSet rs, int row) throws SQLException {
+				return new Person(rs.getString(1), rs.getString(2));
+			}
+		});
+		for (Person person : results) {
+			System.out.println("Found <" + person + "> in the database.");
+		}
 	}
 
 	@Bean
@@ -42,20 +57,14 @@ public class BatchConfiguration {
 	public ItemReader<Person> reader() {
 		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
 		reader.setResource(new ClassPathResource("sample-data.csv"));
-		reader.setLineMapper(new DefaultLineMapper<Person>() {
-			{
-				setLineTokenizer(new DelimitedLineTokenizer() {
-					{
-						setNames(new String[] { "firstName", "lastName" });
-					}
-				});
-				setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {
-					{
-						setTargetType(Person.class);
-					}
-				});
-			}
-		});
+		reader.setLineMapper(new DefaultLineMapper<Person>() {{
+			setLineTokenizer(new DelimitedLineTokenizer() {{
+				setNames(new String[] { "firstName", "lastName" });
+			}});
+			setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
+				setTargetType(Person.class);
+			}});
+		}});
 		return reader;
 	}
 
@@ -75,16 +84,22 @@ public class BatchConfiguration {
 
 	@Bean
 	public Job importUserJob(JobBuilderFactory jobs, Step s1) {
-		Job job = jobs.get("importUserJob").incrementer(new RunIdIncrementer()).flow(s1)
-				.end().build();
-		return job;
+		return jobs.get("importUserJob")
+				.incrementer(new RunIdIncrementer())
+				.flow(s1)
+				.end()
+				.build();
 	}
 
 	@Bean
 	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
 			ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
-		return stepBuilderFactory.get("step1").<Person, Person> chunk(10).reader(reader)
-				.processor(processor).writer(writer).build();
+		return stepBuilderFactory.get("step1")
+				.<Person, Person> chunk(10)
+				.reader(reader)
+				.processor(processor)
+				.writer(writer)
+				.build();
 	}
 
 }
