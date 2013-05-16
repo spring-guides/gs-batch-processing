@@ -17,45 +17,48 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.bootstrap.SpringApplication;
+import org.springframework.bootstrap.context.annotation.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 @Configuration
 @EnableBatchProcessing
+@EnableAutoConfiguration
 public class BatchConfiguration {
 
-	@Bean
-	public DataSource dataSource() {
-		return new EmbeddedDatabaseBuilder().
-				addScript("classpath:org/springframework/batch/core/schema-drop-hsqldb.sql").
-				addScript("classpath:org/springframework/batch/core/schema-hsqldb.sql").
-				addScript("classpath:person.sql").
-				build();
+	public static void main(String[] args) {
+		SpringApplication.run(BatchConfiguration.class, args);
 	}
-	
+
 	@Bean
 	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 		return new JdbcTemplate(dataSource);
 	}
-	
+
 	@Bean
 	public ItemReader<Person> reader() {
 		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
 		reader.setResource(new ClassPathResource("sample-data.csv"));
-		reader.setLineMapper(new DefaultLineMapper<Person>() {{
-			setLineTokenizer(new DelimitedLineTokenizer(){{
-				setNames(new String[]{"firstName", "lastName"});
-			}});
-			setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>(){{
-				setTargetType(Person.class);
-			}});
-		}});
+		reader.setLineMapper(new DefaultLineMapper<Person>() {
+			{
+				setLineTokenizer(new DelimitedLineTokenizer() {
+					{
+						setNames(new String[] { "firstName", "lastName" });
+					}
+				});
+				setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {
+					{
+						setTargetType(Person.class);
+					}
+				});
+			}
+		});
 		return reader;
 	}
-	
+
 	@Bean
 	public ItemProcessor<Person, Person> processor() {
 		return new PersonItemProcessor();
@@ -69,26 +72,19 @@ public class BatchConfiguration {
 		writer.setDataSource(dataSource);
 		return writer;
 	}
-	
+
 	@Bean
 	public Job importUserJob(JobBuilderFactory jobs, Step s1) {
-		Job job = jobs.get("importUserJob")
-				.incrementer(new RunIdIncrementer())
-				.flow(s1)
-				.end()
-				.build();
+		Job job = jobs.get("importUserJob").incrementer(new RunIdIncrementer()).flow(s1)
+				.end().build();
 		return job;
 	}
-	
+
 	@Bean
-	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader, 
+	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
 			ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
-		return stepBuilderFactory.get("step1")
-				.<Person,Person> chunk(10)
-				.reader(reader)
-				.processor(processor)
-				.writer(writer)
-				.build();
+		return stepBuilderFactory.get("step1").<Person, Person> chunk(10).reader(reader)
+				.processor(processor).writer(writer).build();
 	}
-	
+
 }
