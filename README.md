@@ -1,5 +1,3 @@
-<!-- See expanded [macro:...] values at https://github.com/springframework-meta/springframework.org/tree/master/doc/gs-macros.md -->
-
 # Getting Started: Batch-based Processing
 
 What you'll build
@@ -15,12 +13,12 @@ What you'll need
 - [JDK 7][jdk7] or later
 - Your choice of Maven (3.0+) or Gradle (1.5+)
 
-[macro:how-to-complete-this-guide]
+{!snippet:how-to-complete-this-guide}
 
 <a name="scratch"></a>
 Set up the project
 ------------------
-[macro:build-system-intro]
+{!snippet:build-system-intro}
 
 <span class="maven">
 ### Create a Maven POM
@@ -74,7 +72,7 @@ Set up the project
 	</pluginRepositories>
 </project>
 ```
-[macro:bootstrap-starter-pom-disclaimer]
+{!snippet:bootstrap-starter-pom-disclaimer}
 </span>
 
 <span class="gradle">
