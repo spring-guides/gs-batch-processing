@@ -449,7 +449,7 @@ Run the batch job
 
 Now you can run it from the jar as well, and distribute that as an executable artifact:
 ```
-$ java -jar target/gs-batch-processing-complete-1.0.jar
+$ java -jar target/gs-batch-processing-complete-0.1.0.jar
 ```
 
 When it runs, it will print out a line for each person that gets transforms. At the end, after the job has run, we can also see the output from querying the database.
