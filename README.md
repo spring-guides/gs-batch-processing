@@ -9,22 +9,91 @@ What you'll need
 ----------------
 
  - About 15 minutes
- - {!include#prereq-editor-jdk-buildtools}
+ - A favorite text editor or IDE
+ - [JDK 6][jdk] or better
+ - [Maven 3.0][mvn] or later
 
-{!include#how-to-complete-this-guide}
+[jdk]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+[mvn]: http://maven.apache.org/download.cgi
+
+How to complete this guide
+--------------------------
+
+Like all Spring's [Getting Started guides](/getting-started), you can start from scratch and complete each step, or you can bypass basic setup steps that are already familiar to you. Either way, you end up with working code.
+
+To **start from scratch**, move on to [Set up the project](#scratch).
+
+To **skip the basics**, do the following:
+
+ - [Download][zip] and unzip the source repository for this guide, or clone it using [git](/understanding/git):
+`git clone https://github.com/springframework-meta/{@project-name}.git`
+ - cd into `{@project-name}/initial`
+ - Jump ahead to [Create a resource representation class](#initial).
+
+**When you're finished**, you can check your results against the code in `{@project-name}/complete`.
 
 <a name="scratch"></a>
 Set up the project
 ------------------
-{!include#build-system-intro}
+First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Maven](https://maven.apache.org) and [Gradle](http://gradle.org) is included here. If you're not familiar with either, refer to our [Getting Started with Maven](../gs-maven/README.md) or [Getting Started with Gradle](../gs-gradle/README.md) guides.
 
 ### Create a Maven POM
 
-{!include#maven-project-setup-options}
+> **ERROR:** Section 'maven-project-setup-options' not found
 
-    {!include:initial/pom.xml}
+`pom.xml`
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-{!include#bootstrap-starter-pom-disclaimer}
+	<groupId>org.springframework</groupId>
+	<artifactId>gs-batch-processing-initial</artifactId>
+	<version>0.1.0</version>
+
+    <parent>
+        <groupId>org.springframework.bootstrap</groupId>
+        <artifactId>spring-bootstrap-starters</artifactId>
+        <version>0.5.0.BUILD-SNAPSHOT</version>
+    </parent>
+    
+	<dependencies>
+        <dependency>
+            <groupId>org.springframework.bootstrap</groupId>
+            <artifactId>spring-bootstrap-batch-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+        </dependency>
+   	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>spring-snapshots</id>
+			<url>http://repo.springsource.org/snapshot</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<url>http://repo.springsource.org/milestone</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<url>http://repo.springsource.org/snapshot</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+</project>
+```
+
+TODO: mention that we're using Spring Bootstrap's [_starter POMs_](../gs-bootstrap-starter) here.
+
+Note to experienced Maven users who are unaccustomed to using an external parent project: you can take it out later, it's just there to reduce the amount of code you have to write to get started.
 
 Create some business data
 --------------------------
@@ -47,7 +116,16 @@ Defining the destination for our data
 
 Now that we have an idea what the data looks like, let's write a SQL script to create a table to store it.
 
-    {!include:complete/src/main/resources/schema.sql}
+`src/main/resources/schema.sql`
+```sql
+DROP TABLE people IF EXISTS;
+
+CREATE TABLE people  (
+	person_id BIGINT IDENTITY NOT NULL PRIMARY KEY,
+	first_name VARCHAR(20),
+	last_name VARCHAR(20)
+);
+```
 
 <a name="initial"></a>
 Create a business class
@@ -55,7 +133,45 @@ Create a business class
 
 Now that we see the format of inputs and outputs for our data, let's write some code to represent a row of data.
 
-    {!include:complete/src/main/java/hello/Person.java}
+`src/main/java/hello/Person.java`
+```java
+package hello;
+
+public class Person {
+    private String lastName;
+    private String firstName;
+    
+    public Person() {
+    	
+    }
+
+	public Person(String firstName, String lastName) {
+    	this.firstName = firstName;
+    	this.lastName = lastName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+    @Override
+    public String toString() {
+        return "firstName: " + firstName + ", lastName: " + lastName;
+    }
+}
+```
 
 The `Person` class can either be instantiated with first and last name through a constructor or by setting the properties.
 
@@ -64,7 +180,26 @@ Create an intermediate processor
 
 A common paradigm in batch processing is to ingest data, transform it, and then pipe it out somewhere else. Let's write a simple transformer that converts the names to uppercase.
 
-    {!include:complete/src/main/java/hello/PersonItemProcessor.java}
+`src/main/java/hello/PersonItemProcessor.java`
+```java
+package hello;
+
+import org.springframework.batch.item.ItemProcessor;
+
+public class PersonItemProcessor implements ItemProcessor<Person, Person> {
+    @Override
+    public Person process(final Person person) throws Exception {
+        final String firstName = person.getFirstName().toUpperCase();
+        final String lastName = person.getLastName().toUpperCase();
+        
+        final Person transformedPerson = new Person(firstName, lastName);
+
+        System.out.println("Converting (" + person + ") into (" + transformedPerson + ")");
+        
+        return transformedPerson;
+    }
+}
+```
 
 `PersonItemProcessor` implements Spring Batch's `ItemProcessor` interface. This makes it easy to wire the code into a batch job we'll define further down in this guide. According to the interface, we will get handed an incoming `Person` object, after which we will transform it to an upper-cased `Person`.
 
@@ -75,13 +210,149 @@ Putting together a batch job
 
 Now let's put together the actual batch job. Spring Batch provides many utility classes that reduces our need to write custom code. Instead, we can focus on the business logic.
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java}
+`src/main/java/hello/BatchConfiguration.java`
+```java
+package hello;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.bootstrap.SpringApplication;
+import org.springframework.bootstrap.context.annotation.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+@Configuration
+@EnableBatchProcessing
+@EnableAutoConfiguration
+public class BatchConfiguration {
+
+	@Bean
+	public ItemReader<Person> reader() {
+		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
+		reader.setResource(new ClassPathResource("sample-data.csv"));
+		reader.setLineMapper(new DefaultLineMapper<Person>() {{
+			setLineTokenizer(new DelimitedLineTokenizer() {{
+				setNames(new String[] { "firstName", "lastName" });
+			}});
+			setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
+				setTargetType(Person.class);
+			}});
+		}});
+		return reader;
+	}
+
+	@Bean
+	public ItemProcessor<Person, Person> processor() {
+		return new PersonItemProcessor();
+	}
+
+	@Bean
+	public ItemWriter<Person> writer(DataSource dataSource) {
+		JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
+		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
+		writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
+		writer.setDataSource(dataSource);
+		return writer;
+	}
+
+	@Bean
+	public Job importUserJob(JobBuilderFactory jobs, Step s1) {
+		return jobs.get("importUserJob")
+				.incrementer(new RunIdIncrementer())
+				.flow(s1)
+				.end()
+				.build();
+	}
+
+	@Bean
+	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
+			ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
+		return stepBuilderFactory.get("step1")
+				.<Person, Person> chunk(10)
+				.reader(reader)
+				.processor(processor)
+				.writer(writer)
+				.build();
+	}
+
+	@Bean
+	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
+	}
+
+	public static void main(String[] args) {
+		ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
+		List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
+			@Override
+			public Person mapRow(ResultSet rs, int row) throws SQLException {
+				return new Person(rs.getString(1), rs.getString(2));
+			}
+		});
+		for (Person person : results) {
+			System.out.println("Found <" + person + "> in the database.");
+		}
+	}
+}
+```
 
 For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs, saving us a lot of leg work.
 
 Let's break this down:
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java#reader-writer-processor}
+`src/main/java/hello/BatchConfiguration.java`
+```java
+	@Bean
+	public ItemReader<Person> reader() {
+		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
+		reader.setResource(new ClassPathResource("sample-data.csv"));
+		reader.setLineMapper(new DefaultLineMapper<Person>() {{
+			setLineTokenizer(new DelimitedLineTokenizer() {{
+				setNames(new String[] { "firstName", "lastName" });
+			}});
+			setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
+				setTargetType(Person.class);
+			}});
+		}});
+		return reader;
+	}
+
+	@Bean
+	public ItemProcessor<Person, Person> processor() {
+		return new PersonItemProcessor();
+	}
+
+	@Bean
+	public ItemWriter<Person> writer(DataSource dataSource) {
+		JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
+		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
+		writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
+		writer.setDataSource(dataSource);
+		return writer;
+	}
+```
 
 This first chunk of code defines the input, processor, and output.
 - `reader()` creates an `ItemReader`. It looks for a file called `sample-data.csv` and parses each line item with enough information to turn it into a `Person`.
@@ -90,7 +361,28 @@ This first chunk of code defines the input, processor, and output.
 
 The next chunk is focused on the actual job configuration.
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java#job-step}
+`src/main/java/hello/BatchConfiguration.java`
+```java
+	@Bean
+	public Job importUserJob(JobBuilderFactory jobs, Step s1) {
+		return jobs.get("importUserJob")
+				.incrementer(new RunIdIncrementer())
+				.flow(s1)
+				.end()
+				.build();
+	}
+
+	@Bean
+	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
+			ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
+		return stepBuilderFactory.get("step1")
+				.<Person, Person> chunk(10)
+				.reader(reader)
+				.processor(processor)
+				.writer(writer)
+				.build();
+	}
+```
 
 The first method defines our job and the second one defines a single step. Jobs are built out of steps, where each step can involved a reader, a processor, and a writer. 
 
@@ -102,7 +394,26 @@ In our step definition, we define how much data to write at a time. In this case
 
 Finally, we need the part that runs our application.
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java#template-main}
+`src/main/java/hello/BatchConfiguration.java`
+```java
+	@Bean
+	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
+	}
+
+	public static void main(String[] args) {
+		ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
+		List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
+			@Override
+			public Person mapRow(ResultSet rs, int row) throws SQLException {
+				return new Person(rs.getString(1), rs.getString(2));
+			}
+		});
+		for (Person person : results) {
+			System.out.println("Found <" + person + "> in the database.");
+		}
+	}
+```
 
 This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's all done, the data will be gone. For demonstration purposes, there is a little extra code to create a `JdbcTemplate` and query the database, printing out all the people our batch job inserts.
 
@@ -111,7 +422,21 @@ Build an executable JAR
 -----------------------
 Add the following to your `pom.xml` file (keeping existing properties and plugins intact):
 
-    {!include:complete/pom.xml#shade-config}
+`pom.xml`
+```xml
+	<properties>
+		<start-class>hello.BatchConfiguration</start-class>
+	</properties>
+
+	<build>
+	    <plugins>
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-shade-plugin</artifactId>
+	        </plugin>
+	    </plugins>
+	</build>
+```
 
 The following will produce a single executable JAR file containing all necessary dependency classes:
 
