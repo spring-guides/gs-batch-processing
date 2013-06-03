@@ -13,12 +13,12 @@ What you'll need
 - [JDK 7][jdk7] or later
 - Your choice of Maven (3.0+) or Gradle (1.5+)
 
-{!snippet:how-to-complete-this-guide}
+{!include#how-to-complete-this-guide}
 
 <a name="scratch"></a>
 Set up the project
 ------------------
-{!snippet:build-system-intro}
+{!include#build-system-intro}
 
 <span class="maven">
 ### Create a Maven POM
@@ -72,7 +72,7 @@ Set up the project
 	</pluginRepositories>
 </project>
 ```
-{!snippet:bootstrap-starter-pom-disclaimer}
+{!include#bootstrap-starter-pom-disclaimer}
 </span>
 
 <span class="gradle">
