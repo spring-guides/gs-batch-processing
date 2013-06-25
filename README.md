@@ -1,16 +1,16 @@
-# Getting Started: Batch-based Processing
+# Getting Started: Creating a Batch Service
 
 What you'll build
 -----------------
 
-This guide will take you through creating a very basic batch-driven solution. We'll build a service that imports data from a CSV spreadsheet, transforms it with some custom code, and stores the final results in a database.
+This guide walks you through creating a basic batch-driven solution. You build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
 
 What you'll need
 ----------------
 
  - About 15 minutes
  - A favorite text editor or IDE
- - [JDK 6][jdk] or better
+ - [JDK 6][jdk] or later
  - [Maven 3.0][mvn] or later
 
 [jdk]: http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -35,11 +35,18 @@ To **skip the basics**, do the following:
 <a name="scratch"></a>
 Set up the project
 ------------------
-First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Maven](https://maven.apache.org) and [Gradle](http://gradle.org) is included here. If you're not familiar with either, refer to our [Getting Started with Maven](../gs-maven/README.md) or [Getting Started with Gradle](../gs-gradle/README.md) guides.
+First you set up a basic build script. You can use any build system you like when building apps with Spring, but the code you need to work with [Maven](https://maven.apache.org) and [Gradle](http://gradle.org) is included here. If you're not familiar with either, refer to [Getting Started with Maven](../gs-maven/README.md) or [Getting Started with Gradle](../gs-gradle/README.md).
+
+### Create the directory structure
+
+In a project directory of your choosing, create the following subdirectory structure; for example, with `mkdir -p src/main/java/hello` on *nix systems:
+
+    └── src
+        └── main
+            └── java
+                └── hello
 
 ### Create a Maven POM
-
-> **ERROR:** Section 'maven-project-setup-options' not found
 
 `pom.xml`
 ```xml
@@ -95,10 +102,9 @@ TODO: mention that we're using Spring Bootstrap's [_starter POMs_](../gs-bootstr
 
 Note to experienced Maven users who are unaccustomed to using an external parent project: you can take it out later, it's just there to reduce the amount of code you have to write to get started.
 
-Create some business data
---------------------------
+### Create business data
 
-Before we can ingest a CSV spreadsheet, we need to create one. Normally this would be data supplied by your customer or a business analyst. In this case, we'll make up our own.
+Typically your customer or a business analyst supplies a spreadsheet. In this case, you make it up.
 
 `src/main/resources/sample-data.csv`
 ```text
@@ -109,12 +115,11 @@ Jane,Doe
 John,Doe
 ```
 
-This spreadsheet contains a first name and a last name on each row, separated by a comma. This is a fairly common pattern and something we'll see soon that Spring handles out of the box.
+This spreadsheet contains a first name and a last name on each row, separated by a comma. This is a fairly common pattern that Spring handles out-of-the-box, as you will see.
 
-Defining the destination for our data
--------------------------------------
+### Define the destination for your data
 
-Now that we have an idea what the data looks like, let's write a SQL script to create a table to store it.
+Next, you write a SQL script to create a table to store the data.
 
 `src/main/resources/schema.sql`
 ```sql
@@ -131,7 +136,7 @@ CREATE TABLE people  (
 Create a business class
 -----------------------
 
-Now that we see the format of inputs and outputs for our data, let's write some code to represent a row of data.
+Now that you see the format of data inputs and outputs, you write code to represent a row of data.
 
 `src/main/java/hello/Person.java`
 ```java
@@ -173,12 +178,12 @@ public class Person {
 }
 ```
 
-The `Person` class can either be instantiated with first and last name through a constructor or by setting the properties.
+You can instantiate the `Person` class either with first and last name through a constructor, or by setting the properties.
 
 Create an intermediate processor
 --------------------------------
 
-A common paradigm in batch processing is to ingest data, transform it, and then pipe it out somewhere else. Let's write a simple transformer that converts the names to uppercase.
+A common paradigm in batch processing is to ingest data, transform it, and then pipe it out somewhere else. Here you write a simple transformer that converts the names to uppercase.
 
 `src/main/java/hello/PersonItemProcessor.java`
 ```java
@@ -201,14 +206,14 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
 }
 ```
 
-`PersonItemProcessor` implements Spring Batch's `ItemProcessor` interface. This makes it easy to wire the code into a batch job we'll define further down in this guide. According to the interface, we will get handed an incoming `Person` object, after which we will transform it to an upper-cased `Person`.
+`PersonItemProcessor` implements Spring Batch's `ItemProcessor` interface. This makes it easy to wire the code into a batch job that you define further down in this guide. According to the interface, you receive an incoming `Person` object, after which you transform it to an upper-cased `Person`.
 
-> There is no requirement that the input and output types be the same. In fact, it is often the case that after reading one source of data, and different data type is what's needing in the application's data flow.
+> **Note:** There is no requirement that the input and output types be the same. In fact, after one source of data is read, sometimes the application's data flow needs a different data type.
 
-Putting together a batch job
+Put together a batch job
 ----------------------------
 
-Now let's put together the actual batch job. Spring Batch provides many utility classes that reduces our need to write custom code. Instead, we can focus on the business logic.
+Now you put together the actual batch job. Spring Batch provides many utility classes that reduce the need to write custom code. Instead, you can focus on the business logic.
 
 `src/main/java/hello/BatchConfiguration.java`
 ```java
@@ -318,9 +323,9 @@ public class BatchConfiguration {
 }
 ```
 
-For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs, saving us a lot of leg work.
+For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and saves you a lot of leg work.
 
-Let's break this down:
+Break it down:
 
 `src/main/java/hello/BatchConfiguration.java`
 ```java
@@ -354,12 +359,12 @@ Let's break this down:
 	}
 ```
 
-This first chunk of code defines the input, processor, and output.
+The first chunk of code defines the input, processor, and output.
 - `reader()` creates an `ItemReader`. It looks for a file called `sample-data.csv` and parses each line item with enough information to turn it into a `Person`.
-- `processor()` creates an instance of our `PersonItemProcessor` we defined earlier, meant to uppercase the data.
+- `processor()` creates an instance of our `PersonItemProcessor` you defined earlier, meant to uppercase the data.
 - `write(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and automatically gets a copy of the dataSource created by `@EnableBatchProcessing`. It includes the SQL statement needed to insert a single `Person` driven by java bean properties.
 
-The next chunk is focused on the actual job configuration.
+The next chunk focuses on the actual job configuration.
 
 `src/main/java/hello/BatchConfiguration.java`
 ```java
@@ -384,15 +389,15 @@ The next chunk is focused on the actual job configuration.
 	}
 ```
 
-The first method defines our job and the second one defines a single step. Jobs are built out of steps, where each step can involved a reader, a processor, and a writer. 
+The first method defines the job and the second one defines a single step. Jobs are built from steps, where each step can involve a reader, a processor, and a writer. 
 
-In our job definition, we need an incrementer because jobs use a database to maintain execution state. We then list each of the steps, of which our job has just one step. Finally, the job has an end. With all this, the java API spits out a perfectly configured job.
+In this job definition, you need an incrementer because jobs use a database to maintain execution state. You then list each step, of which this job has only one step. The job ends, and the java API produces a perfectly configured job.
 
-In our step definition, we define how much data to write at a time. In this case, it writes up to ten records at a time. Next, we configure the reader, processor, and writer using the injected bits from earlier. Finally, the builder API turns it into a nicely built step.
+In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier. 
 
-> chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
+> **Note:** chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
 
-Finally, we need the part that runs our application.
+Finally, you run the application.
 
 `src/main/java/hello/BatchConfiguration.java`
 ```java
@@ -415,12 +420,12 @@ Finally, we need the part that runs our application.
 	}
 ```
 
-This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's all done, the data will be gone. For demonstration purposes, there is a little extra code to create a `JdbcTemplate` and query the database, printing out all the people our batch job inserts.
+This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
 
 
 Build an executable JAR
 -----------------------
-Add the following to your `pom.xml` file (keeping existing properties and plugins intact):
+Add the following to your `pom.xml` file, keeping existing properties and plugins intact:
 
 `pom.xml`
 ```xml
@@ -438,7 +443,7 @@ Add the following to your `pom.xml` file (keeping existing properties and plugin
 	</build>
 ```
 
-The following will produce a single executable JAR file containing all necessary dependency classes:
+Create a single executable JAR file containing all necessary dependency classes:
 
     $ mvn package
 
@@ -446,11 +451,14 @@ The following will produce a single executable JAR file containing all necessary
 Run the batch job
 -----------------
 
-Now you can run it from the jar as well, and distribute that as an executable artifact:
+Now you can run the job from the JAR as well, and distribute that as an executable artifact:
 
     $ java -jar target/gs-batch-processing-complete-0.1.0.jar
 
 
-When it runs, it will print out a line for each person that gets transforms. At the end, after the job has run, we can also see the output from querying the database.
+The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
-Congratulations! You have just built a batch job to ingest data from a spreadsheet, processed it, and written it into a database.
+Summary
+-------
+
+Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
