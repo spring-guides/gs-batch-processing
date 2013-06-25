@@ -26,9 +26,9 @@ Set up the project
 
 {!include#bootstrap-starter-pom-disclaimer}
 
-### Create some business data
+### Create business data
 
-Typically a spreadsheet is supplied by your customer or a business analyst. In this case, you make it up.
+Typically your customer or a business analyst supplies a spreadsheet. In this case, you make it up.
 
 `src/main/resources/sample-data.csv`
 ```text
@@ -94,20 +94,20 @@ The first method defines the job and the second one defines a single step. Jobs 
 
 In this job definition, you need an incrementer because jobs use a database to maintain execution state. You then list each step, of which this job has only one step. The job ends, and the java API produces a perfectly configured job.
 
-In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier. Finally, the builder API turns it into a nicely built step.
+In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier. 
 
-> chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
+> Note: chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
 
 Finally, you run the application.
 
     {!include:complete/src/main/java/hello/BatchConfiguration.java#template-main}
 
-This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate` and query the database, and print out the names of people the batch job inserts.
+This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
 
 
 Build an executable JAR
 -----------------------
-Add the following to your `pom.xml` file (keeping existing properties and plugins intact):
+Add the following to your `pom.xml` file, keeping existing properties and plugins intact:
 
     {!include:complete/pom.xml#shade-config}
 
@@ -124,7 +124,7 @@ Now you can run the job from the JAR as well, and distribute that as an executab
     $ java -jar target/gs-batch-processing-complete-0.1.0.jar
 
 
-The job prints out a line for each person that gets transformed. At the end, after the job has run, you can also see the output from querying the database.
+The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
 Summary
 -------
