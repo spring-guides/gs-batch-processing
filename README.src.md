@@ -66,7 +66,7 @@ A common paradigm in batch processing is to ingest data, transform it, and then 
 
 `PersonItemProcessor` implements Spring Batch's `ItemProcessor` interface. This makes it easy to wire the code into a batch job that you define further down in this guide. According to the interface, you receive an incoming `Person` object, after which you transform it to an upper-cased `Person`.
 
-> Note: There is no requirement that the input and output types be the same. In fact, after one source of data is read, sometimes the application's data flow needs a different data type.
+> **Note:** There is no requirement that the input and output types be the same. In fact, after one source of data is read, sometimes the application's data flow needs a different data type.
 
 Put together a batch job
 ----------------------------
@@ -75,7 +75,7 @@ Now you put together the actual batch job. Spring Batch provides many utility cl
 
     {!include:complete/src/main/java/hello/BatchConfiguration.java}
 
-For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and save you a lot of leg work.
+For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and saves you a lot of leg work.
 
 Break it down:
 
@@ -96,7 +96,7 @@ In this job definition, you need an incrementer because jobs use a database to m
 
 In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier. 
 
-> Note: chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
+> **Note:** chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
 
 Finally, you run the application.
 
