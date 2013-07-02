@@ -100,7 +100,8 @@ In a project directory of your choosing, create the following subdirectory struc
 
 TODO: mention that we're using Spring Bootstrap's [_starter POMs_](../gs-bootstrap-starter) here.
 
-Note to experienced Maven users who are unaccustomed to using an external parent project: you can take it out later, it's just there to reduce the amount of code you have to write to get started.
+> Note to experienced Maven users who don't use an external parent project: You can take out the project later, it's just there to reduce the amount of code you have to write to get started.
+
 
 ### Create business data
 
@@ -462,3 +463,5 @@ Summary
 -------
 
 Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
+
+[zip]: https://github.com/springframework-meta/gs-batch-processing/archive/master.zip
