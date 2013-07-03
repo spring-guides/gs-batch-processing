@@ -130,3 +130,5 @@ Summary
 -------
 
 Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
+
+[zip]: https://github.com/springframework-meta/gs-batch-processing/archive/master.zip
