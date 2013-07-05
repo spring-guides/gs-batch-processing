@@ -35,7 +35,7 @@ import org.springframework.jdbc.core.RowMapper;
 @EnableAutoConfiguration
 public class BatchConfiguration {
 
-	// {!begin#reader-writer-processor}
+	// {!begin readerwriterprocessor}
 	@Bean
 	public ItemReader<Person> reader() {
 		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
@@ -64,9 +64,9 @@ public class BatchConfiguration {
 		writer.setDataSource(dataSource);
 		return writer;
 	}
-	// {!end#reader-writer-processor}
+	// {!end readerwriterprocessor}
 
-	// {!begin#job-step}
+	// {!begin jobstep}
 	@Bean
 	public Job importUserJob(JobBuilderFactory jobs, Step s1) {
 		return jobs.get("importUserJob")
@@ -86,9 +86,9 @@ public class BatchConfiguration {
 				.writer(writer)
 				.build();
 	}
-	// {!end#job-step}
+	// {!end jobstep}
 
-	// {!begin#template-main}
+	// {!begin templatemain}
 	@Bean
 	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 		return new JdbcTemplate(dataSource);
@@ -106,5 +106,5 @@ public class BatchConfiguration {
 			System.out.println("Found <" + person + "> in the database.");
 		}
 	}
-	// {!end#template-main}
+	// {!end templatemain}
 }

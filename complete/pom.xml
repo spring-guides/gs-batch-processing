@@ -24,7 +24,6 @@
         </dependency>
    	</dependencies>
 
-    <!-- {!begin#shade-config} -->
 	<properties>
 		<start-class>hello.BatchConfiguration</start-class>
 	</properties>
@@ -37,7 +36,6 @@
 	        </plugin>
 	    </plugins>
 	</build>
-    <!-- {!end#shade-config} -->
 
 	<repositories>
 		<repository>

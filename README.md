@@ -1,3 +1,4 @@
+
 # Getting Started: Creating a Batch Service
 
 What you'll build
@@ -26,11 +27,13 @@ To **start from scratch**, move on to [Set up the project](#scratch).
 To **skip the basics**, do the following:
 
  - [Download][zip] and unzip the source repository for this guide, or clone it using [git](/understanding/git):
-`git clone https://github.com/springframework-meta/{@project-name}.git`
- - cd into `{@project-name}/initial`
- - Jump ahead to [Create a resource representation class](#initial).
+`git clone https://github.com/springframework-meta/gs-batch-processing.git`
+ - cd into `gs-batch-processing/initial`
+ - Jump ahead to [Create a business class](#initial).
 
-**When you're finished**, you can check your results against the code in `{@project-name}/complete`.
+**When you're finished**, you can check your results against the code in `gs-batch-processing/complete`.
+[zip]: https://github.com/springframework-meta/gs-batch-processing/archive/master.zip
+
 
 <a name="scratch"></a>
 Set up the project
@@ -56,7 +59,7 @@ In a project directory of your choosing, create the following subdirectory struc
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework</groupId>
-	<artifactId>gs-batch-processing-initial</artifactId>
+	<artifactId>gs-batch-processing-complete</artifactId>
 	<version>0.1.0</version>
 
     <parent>
@@ -75,6 +78,19 @@ In a project directory of your choosing, create the following subdirectory struc
             <artifactId>hsqldb</artifactId>
         </dependency>
    	</dependencies>
+
+	<properties>
+		<start-class>hello.BatchConfiguration</start-class>
+	</properties>
+
+	<build>
+	    <plugins>
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-shade-plugin</artifactId>
+	        </plugin>
+	    </plugins>
+	</build>
 
 	<repositories>
 		<repository>
@@ -100,15 +116,14 @@ In a project directory of your choosing, create the following subdirectory struc
 
 TODO: mention that we're using Spring Bootstrap's [_starter POMs_](../gs-bootstrap-starter) here.
 
-> Note to experienced Maven users who don't use an external parent project: You can take out the project later, it's just there to reduce the amount of code you have to write to get started.
-
+Note to experienced Maven users who are unaccustomed to using an external parent project: you can take it out later, it's just there to reduce the amount of code you have to write to get started.
 
 ### Create business data
 
 Typically your customer or a business analyst supplies a spreadsheet. In this case, you make it up.
 
 `src/main/resources/sample-data.csv`
-```text
+```csv
 Jill,Doe
 Joe,Doe
 Justin,Doe
@@ -423,30 +438,37 @@ Finally, you run the application.
 
 This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
 
+### Build an executable JAR
 
-Build an executable JAR
------------------------
-Add the following to your `pom.xml` file, keeping existing properties and plugins intact:
+Now that your `Application` class is ready, you simply instruct the build system to create a single, executable jar containing everything. This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
+
+Add the following configuration to your existing Maven POM:
 
 `pom.xml`
 ```xml
-	<properties>
-		<start-class>hello.BatchConfiguration</start-class>
-	</properties>
+    <properties>
+        <start-class>hello.Application</start-class>
+    </properties>
 
-	<build>
-	    <plugins>
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-shade-plugin</artifactId>
-	        </plugin>
-	    </plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 ```
 
-Create a single executable JAR file containing all necessary dependency classes:
+The `start-class` property tells Maven to create a `META-INF/MANIFEST.MF` file with a `Main-Class: hello.Application` entry. This entry enables you to run the jar with `java -jar`.
 
-    $ mvn package
+The [Maven Shade plugin][maven-shade-plugin] extracts classes from all jars on the classpath and builds a single "über-jar", which makes it more convenient to execute and transport your service.
+
+Now run the following to produce a single executable JAR file containing all necessary dependency classes and resources:
+
+    mvn package
+
+[maven-shade-plugin]: https://maven.apache.org/plugins/maven-shade-plugin
 
 
 Run the batch job
@@ -463,5 +485,3 @@ Summary
 -------
 
 Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
-
-[zip]: https://github.com/springframework-meta/gs-batch-processing/archive/master.zip
