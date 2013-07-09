@@ -12,7 +12,7 @@ There's more to data integration than is covered here. You may want to continue 
 
 [gs-integration]: /guides/gs/integration/content
 [gs-capturing-stream-data]: /guides/gs/capturing-stream-data/content
-[gs-messaging-jms]: /guides/gs/messaging-rabbitmq/content
+[gs-messaging-jms]: /guides/gs/messaging-jms/content
 [gs-messaging-rabbitmq]: /guides/gs/messaging-rabbitmq/content
 [gs-messaging-redis]: /guides/gs/messaging-redis/content
 
