@@ -102,14 +102,7 @@ This example uses a memory-based database (provided by `@EnableBatchProcessing`)
 
 ## <@build_an_executable_jar/>
 
-
-Run the batch job
------------------
-
-Now you can run the job from the JAR as well, and distribute that as an executable artifact:
-
-    $ java -jar target/${project_id}-complete-0.1.0.jar
-
+<@run_the_application module="batch job"/>
 
 The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
