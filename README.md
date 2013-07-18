@@ -79,19 +79,6 @@ In a project directory of your choosing, create the following subdirectory struc
         </dependency>
    	</dependencies>
 
-	<properties>
-		<start-class>hello.BatchConfiguration</start-class>
-	</properties>
-
-	<build>
-	    <plugins>
-	        <plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-shade-plugin</artifactId>
-	        </plugin>
-	    </plugins>
-	</build>
-
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>
