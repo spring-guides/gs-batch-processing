@@ -63,15 +63,15 @@ In a project directory of your choosing, create the following subdirectory struc
 	<version>0.1.0</version>
 
     <parent>
-        <groupId>org.springframework.bootstrap</groupId>
-        <artifactId>spring-bootstrap-starters</artifactId>
+        <groupId>org.springframework.zero</groupId>
+        <artifactId>spring-starter-parent</artifactId>
         <version>0.5.0.BUILD-SNAPSHOT</version>
     </parent>
     
 	<dependencies>
         <dependency>
-            <groupId>org.springframework.bootstrap</groupId>
-            <artifactId>spring-bootstrap-batch-starter</artifactId>
+            <groupId>org.springframework.zero</groupId>
+            <artifactId>spring-starter-batch</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -124,7 +124,7 @@ This spreadsheet contains a first name and a last name on each row, separated by
 
 Next, you write a SQL script to create a table to store the data.
 
-`src/main/resources/schema.sql`
+`src/main/resources/schema-all.sql`
 ```sql
 DROP TABLE people IF EXISTS;
 
@@ -134,6 +134,8 @@ CREATE TABLE people  (
 	last_name VARCHAR(20)
 );
 ```
+
+> **Note:** Spring Zero runs `schema-@@platform@@` automatically during startup. `-all` is the default for all platforms.
 
 <a name="initial"></a>
 Create a business class
@@ -228,6 +230,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.autoconfigure.EnableAutoConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -244,7 +247,6 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.bootstrap.SpringApplication;
-import org.springframework.bootstrap.context.annotation.EnableAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -41,7 +41,9 @@ This spreadsheet contains a first name and a last name on each row, separated by
 
 Next, you write a SQL script to create a table to store the data.
 
-    <@snippet path="src/main/resources/schema.sql" prefix="initial"/>
+    <@snippet path="src/main/resources/schema-all.sql" prefix="initial"/>
+
+> **Note:** Spring Zero runs `schema-@@platform@@` automatically during startup. `-all` is the default for all platforms.
 
 <a name="initial"></a>
 Create a business class
