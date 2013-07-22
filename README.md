@@ -135,7 +135,7 @@ CREATE TABLE people  (
 );
 ```
 
-> **Note:** Spring Zero runs `schema-@@platform@@` automatically during startup. `-all` is the default for all platforms.
+> **Note:** Spring Zero runs `schema-@@platform@@.sql` automatically during startup. `-all` is the default for all platforms.
 
 <a name="initial"></a>
 Create a business class
