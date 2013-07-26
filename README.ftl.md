@@ -1,7 +1,5 @@
 <#assign project_id="gs-batch-processing">
 
-# Getting Started: Creating a Batch Service
-
 What you'll build
 -----------------
 

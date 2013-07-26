@@ -1,6 +1,4 @@
 
-# Getting Started: Creating a Batch Service
-
 What you'll build
 -----------------
 
