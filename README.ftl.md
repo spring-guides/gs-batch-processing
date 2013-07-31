@@ -41,7 +41,7 @@ Next, you write a SQL script to create a table to store the data.
 
     <@snippet path="src/main/resources/schema-all.sql" prefix="initial"/>
 
-> **Note:** Spring Zero runs `schema-@@platform@@.sql` automatically during startup. `-all` is the default for all platforms.
+> **Note:** Spring Boot runs `schema-@@platform@@.sql` automatically during startup. `-all` is the default for all platforms.
 
 <a name="initial"></a>
 Create a business class
