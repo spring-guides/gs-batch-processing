@@ -102,7 +102,7 @@ This example uses a memory-based database (provided by `@EnableBatchProcessing`)
 
 ## <@build_an_executable_jar/>
 
-<@run_the_application module="batch job"/>
+<@run_the_application_with_maven module="batch job"/>
 
 The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
