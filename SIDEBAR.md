@@ -10,11 +10,11 @@ There's more to data integration than is covered here. You may want to continue 
 * [Messaging with RabbitMQ][gs-messaging-rabbitmq]
 * [Messaging with Redis][gs-messaging-redis]
 
-[gs-integration]: /guides/gs/integration/content
-[gs-capturing-stream-data]: /guides/gs/capturing-stream-data/content
-[gs-messaging-jms]: /guides/gs/messaging-jms/content
-[gs-messaging-rabbitmq]: /guides/gs/messaging-rabbitmq/content
-[gs-messaging-redis]: /guides/gs/messaging-redis/content
+[gs-integration]: /guides/gs/integration/
+[gs-capturing-stream-data]: /guides/gs/capturing-stream-data/
+[gs-messaging-jms]: /guides/gs/messaging-jms/
+[gs-messaging-rabbitmq]: /guides/gs/messaging-rabbitmq/
+[gs-messaging-redis]: /guides/gs/messaging-redis/
 
 ### Tutorials
 
