@@ -54,12 +54,12 @@ In a project directory of your choosing, create the following subdirectory struc
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.springframework</groupId>
-	<artifactId>gs-batch-processing</artifactId>
-	<version>0.1.0</version>
+    <groupId>org.springframework</groupId>
+    <artifactId>gs-batch-processing</artifactId>
+    <version>0.1.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -67,7 +67,7 @@ In a project directory of your choosing, create the following subdirectory struc
         <version>0.5.0.BUILD-SNAPSHOT</version>
     </parent>
     
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-batch</artifactId>
@@ -76,27 +76,24 @@ In a project directory of your choosing, create the following subdirectory struc
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
         </dependency>
-   	</dependencies>
+    </dependencies>
 
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<url>http://repo.springsource.org/libs-snapshot</url>
-			<snapshots><enabled>true</enabled></snapshots>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<url>http://repo.springsource.org/libs-milestone</url>
-			<snapshots><enabled>true</enabled></snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<url>http://repo.springsource.org/libs-snapshot</url>
-			<snapshots><enabled>true</enabled></snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+    <repositories>
+        <repository>
+            <id>spring-snapshots</id>
+            <url>http://repo.springsource.org/libs-snapshot</url>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>http://repo.springsource.org/libs-snapshot</url>
+            <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
 </project>
 ```
 
@@ -128,9 +125,9 @@ Next, you write a SQL script to create a table to store the data.
 DROP TABLE people IF EXISTS;
 
 CREATE TABLE people  (
-	person_id BIGINT IDENTITY NOT NULL PRIMARY KEY,
-	first_name VARCHAR(20),
-	last_name VARCHAR(20)
+    person_id BIGINT IDENTITY NOT NULL PRIMARY KEY,
+    first_name VARCHAR(20),
+    last_name VARCHAR(20)
 );
 ```
 
@@ -149,19 +146,19 @@ package hello;
 public class Person {
     private String lastName;
     private String firstName;
-    
+
     public Person() {
-    	
+
     }
 
-	public Person(String firstName, String lastName) {
-    	this.firstName = firstName;
-    	this.lastName = lastName;
-	}
+    public Person(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -172,13 +169,14 @@ public class Person {
     }
 
     public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+        this.lastName = lastName;
+    }
 
     @Override
     public String toString() {
         return "firstName: " + firstName + ", lastName: " + lastName;
     }
+
 }
 ```
 
@@ -196,17 +194,19 @@ package hello;
 import org.springframework.batch.item.ItemProcessor;
 
 public class PersonItemProcessor implements ItemProcessor<Person, Person> {
+
     @Override
     public Person process(final Person person) throws Exception {
         final String firstName = person.getFirstName().toUpperCase();
         final String lastName = person.getLastName().toUpperCase();
-        
+
         final Person transformedPerson = new Person(firstName, lastName);
 
         System.out.println("Converting (" + person + ") into (" + transformedPerson + ")");
-        
+
         return transformedPerson;
     }
+
 }
 ```
 
@@ -258,72 +258,72 @@ import org.springframework.jdbc.core.RowMapper;
 @EnableAutoConfiguration
 public class BatchConfiguration {
 
-	@Bean
-	public ItemReader<Person> reader() {
-		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
-		reader.setResource(new ClassPathResource("sample-data.csv"));
-		reader.setLineMapper(new DefaultLineMapper<Person>() {{
-			setLineTokenizer(new DelimitedLineTokenizer() {{
-				setNames(new String[] { "firstName", "lastName" });
-			}});
-			setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
-				setTargetType(Person.class);
-			}});
-		}});
-		return reader;
-	}
+    @Bean
+    public ItemReader<Person> reader() {
+        FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
+        reader.setResource(new ClassPathResource("sample-data.csv"));
+        reader.setLineMapper(new DefaultLineMapper<Person>() {{
+            setLineTokenizer(new DelimitedLineTokenizer() {{
+                setNames(new String[] { "firstName", "lastName" });
+            }});
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
+                setTargetType(Person.class);
+            }});
+        }});
+        return reader;
+    }
 
-	@Bean
-	public ItemProcessor<Person, Person> processor() {
-		return new PersonItemProcessor();
-	}
+    @Bean
+    public ItemProcessor<Person, Person> processor() {
+        return new PersonItemProcessor();
+    }
 
-	@Bean
-	public ItemWriter<Person> writer(DataSource dataSource) {
-		JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
-		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
-		writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
-		writer.setDataSource(dataSource);
-		return writer;
-	}
+    @Bean
+    public ItemWriter<Person> writer(DataSource dataSource) {
+        JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
+        writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
+        writer.setDataSource(dataSource);
+        return writer;
+    }
 
-	@Bean
-	public Job importUserJob(JobBuilderFactory jobs, Step s1) {
-		return jobs.get("importUserJob")
-				.incrementer(new RunIdIncrementer())
-				.flow(s1)
-				.end()
-				.build();
-	}
+    @Bean
+    public Job importUserJob(JobBuilderFactory jobs, Step s1) {
+        return jobs.get("importUserJob")
+                .incrementer(new RunIdIncrementer())
+                .flow(s1)
+                .end()
+                .build();
+    }
 
-	@Bean
-	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
-			ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
-		return stepBuilderFactory.get("step1")
-				.<Person, Person> chunk(10)
-				.reader(reader)
-				.processor(processor)
-				.writer(writer)
-				.build();
-	}
+    @Bean
+    public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
+            ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
+        return stepBuilderFactory.get("step1")
+                .<Person, Person> chunk(10)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .build();
+    }
 
-	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new JdbcTemplate(dataSource);
-	}
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 
-	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
-		List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
-			@Override
-			public Person mapRow(ResultSet rs, int row) throws SQLException {
-				return new Person(rs.getString(1), rs.getString(2));
-			}
-		});
-		for (Person person : results) {
-			System.out.println("Found <" + person + "> in the database.");
-		}
-	}
+    public static void main(String[] args) {
+        ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
+        List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
+            @Override
+            public Person mapRow(ResultSet rs, int row) throws SQLException {
+                return new Person(rs.getString(1), rs.getString(2));
+            }
+        });
+        for (Person person : results) {
+            System.out.println("Found <" + person + "> in the database.");
+        }
+    }
 }
 ```
 
@@ -333,34 +333,34 @@ Break it down:
 
 `src/main/java/hello/BatchConfiguration.java`
 ```java
-	@Bean
-	public ItemReader<Person> reader() {
-		FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
-		reader.setResource(new ClassPathResource("sample-data.csv"));
-		reader.setLineMapper(new DefaultLineMapper<Person>() {{
-			setLineTokenizer(new DelimitedLineTokenizer() {{
-				setNames(new String[] { "firstName", "lastName" });
-			}});
-			setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
-				setTargetType(Person.class);
-			}});
-		}});
-		return reader;
-	}
+    @Bean
+    public ItemReader<Person> reader() {
+        FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
+        reader.setResource(new ClassPathResource("sample-data.csv"));
+        reader.setLineMapper(new DefaultLineMapper<Person>() {{
+            setLineTokenizer(new DelimitedLineTokenizer() {{
+                setNames(new String[] { "firstName", "lastName" });
+            }});
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
+                setTargetType(Person.class);
+            }});
+        }});
+        return reader;
+    }
 
-	@Bean
-	public ItemProcessor<Person, Person> processor() {
-		return new PersonItemProcessor();
-	}
+    @Bean
+    public ItemProcessor<Person, Person> processor() {
+        return new PersonItemProcessor();
+    }
 
-	@Bean
-	public ItemWriter<Person> writer(DataSource dataSource) {
-		JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
-		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
-		writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
-		writer.setDataSource(dataSource);
-		return writer;
-	}
+    @Bean
+    public ItemWriter<Person> writer(DataSource dataSource) {
+        JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
+        writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
+        writer.setDataSource(dataSource);
+        return writer;
+    }
 ```
 
 The first chunk of code defines the input, processor, and output.
@@ -372,25 +372,25 @@ The next chunk focuses on the actual job configuration.
 
 `src/main/java/hello/BatchConfiguration.java`
 ```java
-	@Bean
-	public Job importUserJob(JobBuilderFactory jobs, Step s1) {
-		return jobs.get("importUserJob")
-				.incrementer(new RunIdIncrementer())
-				.flow(s1)
-				.end()
-				.build();
-	}
+    @Bean
+    public Job importUserJob(JobBuilderFactory jobs, Step s1) {
+        return jobs.get("importUserJob")
+                .incrementer(new RunIdIncrementer())
+                .flow(s1)
+                .end()
+                .build();
+    }
 
-	@Bean
-	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
-			ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
-		return stepBuilderFactory.get("step1")
-				.<Person, Person> chunk(10)
-				.reader(reader)
-				.processor(processor)
-				.writer(writer)
-				.build();
-	}
+    @Bean
+    public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
+            ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
+        return stepBuilderFactory.get("step1")
+                .<Person, Person> chunk(10)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .build();
+    }
 ```
 
 The first method defines the job and the second one defines a single step. Jobs are built from steps, where each step can involve a reader, a processor, and a writer. 
@@ -405,23 +405,23 @@ Finally, you run the application.
 
 `src/main/java/hello/BatchConfiguration.java`
 ```java
-	@Bean
-	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-		return new JdbcTemplate(dataSource);
-	}
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 
-	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
-		List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
-			@Override
-			public Person mapRow(ResultSet rs, int row) throws SQLException {
-				return new Person(rs.getString(1), rs.getString(2));
-			}
-		});
-		for (Person person : results) {
-			System.out.println("Found <" + person + "> in the database.");
-		}
-	}
+    public static void main(String[] args) {
+        ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
+        List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
+            @Override
+            public Person mapRow(ResultSet rs, int row) throws SQLException {
+                return new Person(rs.getString(1), rs.getString(2));
+            }
+        });
+        for (Person person : results) {
+            System.out.println("Found <" + person + "> in the database.");
+        }
+    }
 ```
 
 This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
