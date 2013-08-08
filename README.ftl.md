@@ -1,9 +1,10 @@
 <#assign project_id="gs-batch-processing">
+This guide walks you through creating a basic batch-driven solution.
 
 What you'll build
 -----------------
 
-This guide walks you through creating a basic batch-driven solution. You build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
+You build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
 
 What you'll need
 ----------------
