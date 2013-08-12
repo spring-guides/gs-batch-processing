@@ -1,10 +1,10 @@
 <#assign project_id="gs-batch-processing">
-This guide walks you through creating a basic batch-driven solution.
+This guide walks you through the process of creating a basic batch-driven solution.
 
 What you'll build
 -----------------
 
-You build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
+You'll build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
 
 What you'll need
 ----------------
@@ -81,7 +81,7 @@ Break it down:
 The first chunk of code defines the input, processor, and output.
 - `reader()` creates an `ItemReader`. It looks for a file called `sample-data.csv` and parses each line item with enough information to turn it into a `Person`.
 - `processor()` creates an instance of our `PersonItemProcessor` you defined earlier, meant to uppercase the data.
-- `write(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and automatically gets a copy of the dataSource created by `@EnableBatchProcessing`. It includes the SQL statement needed to insert a single `Person` driven by java bean properties.
+- `write(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and automatically gets a copy of the dataSource created by `@EnableBatchProcessing`. It includes the SQL statement needed to insert a single `Person` driven by Java bean properties.
 
 The next chunk focuses on the actual job configuration.
 
@@ -89,7 +89,7 @@ The next chunk focuses on the actual job configuration.
 
 The first method defines the job and the second one defines a single step. Jobs are built from steps, where each step can involve a reader, a processor, and a writer. 
 
-In this job definition, you need an incrementer because jobs use a database to maintain execution state. You then list each step, of which this job has only one step. The job ends, and the java API produces a perfectly configured job.
+In this job definition, you need an incrementer because jobs use a database to maintain execution state. You then list each step, of which this job has only one step. The job ends, and the Java API produces a perfectly configured job.
 
 In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier. 
 
@@ -101,7 +101,8 @@ Finally, you run the application.
 
 This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
 
-## <@build_an_executable_jar/>
+<@build_an_executable_jar_mainhead/>
+<@build_an_executable_jar/>
 
 <@run_the_application_with_maven module="batch job"/>
 
