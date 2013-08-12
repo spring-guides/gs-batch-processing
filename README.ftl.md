@@ -1,43 +1,38 @@
-# Getting Started: Creating a Batch Service
+<#assign project_id="gs-batch-processing">
+This guide walks you through creating a basic batch-driven solution.
 
 What you'll build
 -----------------
 
-This guide walks you through creating a basic batch-driven solution. You build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
+You build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
 
 What you'll need
 ----------------
 
  - About 15 minutes
- - {!include#prereq-editor-jdk-buildtools}
+ - <@prereq_editor_jdk_buildtools/>
 
-## {!include#how-to-complete-this-guide}
+## <@how_to_complete_this_guide jump_ahead='Create a business class'/>
+
 
 <a name="scratch"></a>
 Set up the project
 ------------------
-{!include#build-system-intro}
+<@build_system_intro/>
 
-{!include#create-directory-structure-hello}
+<@create_directory_structure_hello/>
 
 ### Create a Maven POM
 
-    {!include:initial/pom.xml}
+    <@snippet path="pom.xml" prefix="initial"/>
 
-{!include#bootstrap-starter-pom-disclaimer}
+<@bootstrap_starter_pom_disclaimer/>
 
 ### Create business data
 
 Typically your customer or a business analyst supplies a spreadsheet. In this case, you make it up.
 
-`src/main/resources/sample-data.csv`
-```text
-Jill,Doe
-Joe,Doe
-Justin,Doe
-Jane,Doe
-John,Doe
-```
+    <@snippet path="src/main/resources/sample-data.csv" prefix="initial"/>
 
 This spreadsheet contains a first name and a last name on each row, separated by a comma. This is a fairly common pattern that Spring handles out-of-the-box, as you will see.
 
@@ -45,7 +40,9 @@ This spreadsheet contains a first name and a last name on each row, separated by
 
 Next, you write a SQL script to create a table to store the data.
 
-    {!include:complete/src/main/resources/schema.sql}
+    <@snippet path="src/main/resources/schema-all.sql" prefix="initial"/>
+
+> **Note:** Spring Boot runs `schema-@@platform@@.sql` automatically during startup. `-all` is the default for all platforms.
 
 <a name="initial"></a>
 Create a business class
@@ -53,7 +50,7 @@ Create a business class
 
 Now that you see the format of data inputs and outputs, you write code to represent a row of data.
 
-    {!include:complete/src/main/java/hello/Person.java}
+    <@snippet path="src/main/java/hello/Person.java" prefix="complete"/>
 
 You can instantiate the `Person` class either with first and last name through a constructor, or by setting the properties.
 
@@ -62,7 +59,7 @@ Create an intermediate processor
 
 A common paradigm in batch processing is to ingest data, transform it, and then pipe it out somewhere else. Here you write a simple transformer that converts the names to uppercase.
 
-    {!include:complete/src/main/java/hello/PersonItemProcessor.java}
+    <@snippet path="src/main/java/hello/PersonItemProcessor.java" prefix="complete"/>
 
 `PersonItemProcessor` implements Spring Batch's `ItemProcessor` interface. This makes it easy to wire the code into a batch job that you define further down in this guide. According to the interface, you receive an incoming `Person` object, after which you transform it to an upper-cased `Person`.
 
@@ -73,13 +70,13 @@ Put together a batch job
 
 Now you put together the actual batch job. Spring Batch provides many utility classes that reduce the need to write custom code. Instead, you can focus on the business logic.
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java}
+    <@snippet path="src/main/java/hello/BatchConfiguration.java" prefix="complete"/>
 
 For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and saves you a lot of leg work.
 
 Break it down:
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java#reader-writer-processor}
+    <@snippet "src/main/java/hello/BatchConfiguration.java" "readerwriterprocessor" "/complete"/>
 
 The first chunk of code defines the input, processor, and output.
 - `reader()` creates an `ItemReader`. It looks for a file called `sample-data.csv` and parses each line item with enough information to turn it into a `Person`.
@@ -88,7 +85,7 @@ The first chunk of code defines the input, processor, and output.
 
 The next chunk focuses on the actual job configuration.
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java#job-step}
+    <@snippet "src/main/java/hello/BatchConfiguration.java" "jobstep" "/complete"/>
 
 The first method defines the job and the second one defines a single step. Jobs are built from steps, where each step can involve a reader, a processor, and a writer. 
 
@@ -100,29 +97,13 @@ In the step definition, you define how much data to write at a time. In this cas
 
 Finally, you run the application.
 
-    {!include:complete/src/main/java/hello/BatchConfiguration.java#template-main}
+    <@snippet "src/main/java/hello/BatchConfiguration.java" "templatemain" "/complete"/>
 
 This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
 
+## <@build_an_executable_jar/>
 
-Build an executable JAR
------------------------
-Add the following to your `pom.xml` file, keeping existing properties and plugins intact:
-
-    {!include:complete/pom.xml#shade-config}
-
-Create a single executable JAR file containing all necessary dependency classes:
-
-    $ mvn package
-
-
-Run the batch job
------------------
-
-Now you can run the job from the JAR as well, and distribute that as an executable artifact:
-
-    $ java -jar target/gs-batch-processing-complete-0.1.0.jar
-
+<@run_the_application_with_maven module="batch job"/>
 
 The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
@@ -130,5 +111,3 @@ Summary
 -------
 
 Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
-
-[zip]: https://github.com/springframework-meta/gs-batch-processing/archive/master.zip
