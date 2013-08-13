@@ -6,6 +6,7 @@ What you'll build
 
 You'll build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
 
+
 What you'll need
 ----------------
 
@@ -44,6 +45,7 @@ Next, you write a SQL script to create a table to store the data.
 
 > **Note:** Spring Boot runs `schema-@@platform@@.sql` automatically during startup. `-all` is the default for all platforms.
 
+
 <a name="initial"></a>
 Create a business class
 -----------------------
@@ -53,6 +55,7 @@ Now that you see the format of data inputs and outputs, you write code to repres
     <@snippet path="src/main/java/hello/Person.java" prefix="complete"/>
 
 You can instantiate the `Person` class either with first and last name through a constructor, or by setting the properties.
+
 
 Create an intermediate processor
 --------------------------------
@@ -65,14 +68,15 @@ A common paradigm in batch processing is to ingest data, transform it, and then 
 
 > **Note:** There is no requirement that the input and output types be the same. In fact, after one source of data is read, sometimes the application's data flow needs a different data type.
 
+
 Put together a batch job
-----------------------------
+------------------------
 
 Now you put together the actual batch job. Spring Batch provides many utility classes that reduce the need to write custom code. Instead, you can focus on the business logic.
 
     <@snippet path="src/main/java/hello/BatchConfiguration.java" prefix="complete"/>
 
-For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and saves you a lot of leg work.
+For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and saves you a lot of leg work. This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone.
 
 Break it down:
 
@@ -95,20 +99,40 @@ In the step definition, you define how much data to write at a time. In this cas
 
 > **Note:** chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
 
-Finally, you run the application.
 
-    <@snippet "src/main/java/hello/BatchConfiguration.java" "templatemain" "/complete"/>
+Make the application executable
+-------------------------------
 
-This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
+Although batch processing can be embedded in web apps and WAR files, the simpler approach demonstrated below creates a standalone application. You package everything in a single, executable JAR file, driven by a good old Java `main()` method.
 
-<@build_an_executable_jar_mainhead/>
+### Create an Application class
+
+    <@snippet path="src/main/java/hello/Application.java" prefix="complete"/>
+
+The `main()` method defers to the [`SpringApplication`][] helper class, providing `Application.class` as an argument to its `run()` method. This tells Spring to read the annotation metadata from `Application` and to manage it as a component in the [Spring application context][u-application-context].
+
+The `@ComponentScan` annotation tells Spring to search recursively through the `hello` package and its children for classes marked directly or indirectly with Spring's [`@Component`][] annotation. This directive ensures that Spring finds and registers `BatchConfiguration`, because it is marked with `@Configuration`, which in turn is a kind of `@Component` annotation.
+
+The [`@EnableAutoConfiguration`][] annotation switches on reasonable default behaviors based on the content of your classpath. For example, it looks for any class that implements the `CommandLineRunner` interface and invokes its `run()` method. In this case, it runs the demo code for this guide.
+
+For demonstration purposes, there is code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
+
+<@build_an_executable_jar_subhead/>
+
 <@build_an_executable_jar/>
 
 <@run_the_application_with_maven module="batch job"/>
 
 The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
+
 Summary
 -------
 
 Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
+
+
+[`SpringApplication`]: http://static.springsource.org/spring-bootstrap/docs/0.5.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/bootstrap/SpringApplication.html
+[`@EnableAutoConfiguration`]: http://static.springsource.org/spring-bootstrap/docs/0.5.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/bootstrap/context/annotation/SpringApplication.html
+[`@Component`]: http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/stereotype/Component.html
+

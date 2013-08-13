@@ -5,6 +5,7 @@ What you'll build
 
 You'll build a service that imports data from a CSV spreadsheet, transforms it with custom code, and stores the final results in a database.
 
+
 What you'll need
 ----------------
 
@@ -142,6 +143,7 @@ CREATE TABLE people  (
 
 > **Note:** Spring Boot runs `schema-@@platform@@.sql` automatically during startup. `-all` is the default for all platforms.
 
+
 <a name="initial"></a>
 Create a business class
 -----------------------
@@ -191,6 +193,7 @@ public class Person {
 
 You can instantiate the `Person` class either with first and last name through a constructor, or by setting the properties.
 
+
 Create an intermediate processor
 --------------------------------
 
@@ -223,8 +226,9 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
 
 > **Note:** There is no requirement that the input and output types be the same. In fact, after one source of data is read, sometimes the application's data flow needs a different data type.
 
+
 Put together a batch job
-----------------------------
+------------------------
 
 Now you put together the actual batch job. Spring Batch provides many utility classes that reduce the need to write custom code. Instead, you can focus on the business logic.
 
@@ -232,13 +236,8 @@ Now you put together the actual batch job. Spring Batch provides many utility cl
 ```java
 package hello;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
 import javax.sql.DataSource;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -254,17 +253,13 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 @Configuration
 @EnableBatchProcessing
-@EnableAutoConfiguration
 public class BatchConfiguration {
 
     @Bean
@@ -321,22 +316,10 @@ public class BatchConfiguration {
         return new JdbcTemplate(dataSource);
     }
 
-    public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
-        List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
-            @Override
-            public Person mapRow(ResultSet rs, int row) throws SQLException {
-                return new Person(rs.getString(1), rs.getString(2));
-            }
-        });
-        for (Person person : results) {
-            System.out.println("Found <" + person + "> in the database.");
-        }
-    }
 }
 ```
 
-For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and saves you a lot of leg work.
+For starters, the `@EnableBatchProcessing` annotation adds many critical beans that support jobs and saves you a lot of leg work. This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone.
 
 Break it down:
 
@@ -410,33 +393,61 @@ In the step definition, you define how much data to write at a time. In this cas
 
 > **Note:** chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
 
-Finally, you run the application.
 
-`src/main/java/hello/BatchConfiguration.java`
+Make the application executable
+-------------------------------
+
+Although batch processing can be embedded in web apps and WAR files, the simpler approach demonstrated below creates a standalone application. You package everything in a single, executable JAR file, driven by a good old Java `main()` method.
+
+### Create an Application class
+
+`src/main/java/hello/Application.java`
 ```java
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
+package hello;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+@ComponentScan
+@EnableAutoConfiguration
+public class Application {
 
     public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
+        ApplicationContext ctx = SpringApplication.run(Application.class, args);
+
         List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
             @Override
             public Person mapRow(ResultSet rs, int row) throws SQLException {
                 return new Person(rs.getString(1), rs.getString(2));
             }
         });
+
         for (Person person : results) {
             System.out.println("Found <" + person + "> in the database.");
         }
     }
+
+}
 ```
 
-This example uses a memory-based database (provided by `@EnableBatchProcessing`), meaning that when it's done, the data is gone. For demonstration purposes, there is extra code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
+The `main()` method defers to the [`SpringApplication`][] helper class, providing `Application.class` as an argument to its `run()` method. This tells Spring to read the annotation metadata from `Application` and to manage it as a component in the [Spring application context][u-application-context].
 
-Build an executable JAR
------------------------
+The `@ComponentScan` annotation tells Spring to search recursively through the `hello` package and its children for classes marked directly or indirectly with Spring's [`@Component`][] annotation. This directive ensures that Spring finds and registers `BatchConfiguration`, because it is marked with `@Configuration`, which in turn is a kind of `@Component` annotation.
+
+The [`@EnableAutoConfiguration`][] annotation switches on reasonable default behaviors based on the content of your classpath. For example, it looks for any class that implements the `CommandLineRunner` interface and invokes its `run()` method. In this case, it runs the demo code for this guide.
+
+For demonstration purposes, there is code to create a `JdbcTemplate`, query the database, and print out the names of people the batch job inserts.
+
+### Build an executable JAR
+
 Now that your `Application` class is ready, you simply instruct the build system to create a single, executable jar containing everything. This makes it easy to ship, version, and deploy the service as an application throughout the development lifecycle, across different environments, and so forth.
 
 Add the following configuration to your existing Maven POM:
@@ -482,7 +493,14 @@ $ mvn spring-boot:run
 
 The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
+
 Summary
 -------
 
 Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
+
+
+[`SpringApplication`]: http://static.springsource.org/spring-bootstrap/docs/0.5.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/bootstrap/SpringApplication.html
+[`@EnableAutoConfiguration`]: http://static.springsource.org/spring-bootstrap/docs/0.5.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/bootstrap/context/annotation/SpringApplication.html
+[`@Component`]: http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/stereotype/Component.html
+
