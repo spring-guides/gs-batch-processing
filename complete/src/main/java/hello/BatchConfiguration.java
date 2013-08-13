@@ -1,12 +1,7 @@
 package hello;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
 import javax.sql.DataSource;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -22,17 +17,13 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 @Configuration
 @EnableBatchProcessing
-@EnableAutoConfiguration
 public class BatchConfiguration {
 
     // {!begin readerwriterprocessor}
@@ -88,23 +79,9 @@ public class BatchConfiguration {
     }
     // {!end jobstep}
 
-    // {!begin templatemain}
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
-    public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(BatchConfiguration.class, args);
-        List<Person> results = ctx.getBean(JdbcTemplate.class).query("SELECT first_name, last_name FROM people", new RowMapper<Person>() {
-            @Override
-            public Person mapRow(ResultSet rs, int row) throws SQLException {
-                return new Person(rs.getString(1), rs.getString(2));
-            }
-        });
-        for (Person person : results) {
-            System.out.println("Found <" + person + "> in the database.");
-        }
-    }
-    // {!end templatemain}
 }
