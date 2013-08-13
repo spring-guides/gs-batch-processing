@@ -1,8 +1,8 @@
-## Related resources
+### Related Resources
 
-There's more to data integration than what is covered here. You can continue to explore Spring messaging and integration with the following resources.
+There's more to data integration than is covered here. You may want to continue your exploration of Spring messaging and integration with the following
 
-### Getting Started guides
+### Getting Started Guides
 
 * [Integrating Data][gs-integration]
 * [Capturing Stream Data][gs-capturing-stream-data]
@@ -22,10 +22,10 @@ There's more to data integration than what is covered here. You can continue to 
 
 [tut-rest]: /guides/tutorials/rest
 
-### Concepts and technologies
+### Understanding
 
 * [REST][u-rest]
 * [JSON][u-json]
 
-<@u_rest/>
-<@u_json/>
+[u-rest]: /understanding/REST
+[u-json]: /understanding/JSON
