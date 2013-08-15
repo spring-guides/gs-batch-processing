@@ -26,13 +26,14 @@ To **start from scratch**, move on to [Set up the project](#scratch).
 
 To **skip the basics**, do the following:
 
- - [Download][zip] and unzip the source repository for this guide, or clone it using [git](/understanding/git):
+ - [Download][zip] and unzip the source repository for this guide, or clone it using [git][u-git]:
 `git clone https://github.com/springframework-meta/gs-batch-processing.git`
  - cd into `gs-batch-processing/initial`.
  - Jump ahead to [Create a business class](#initial).
 
 **When you're finished**, you can check your results against the code in `gs-batch-processing/complete`.
 [zip]: https://github.com/springframework-meta/gs-batch-processing/archive/master.zip
+[u-git]: /understanding/Git
 
 
 <a name="scratch"></a>
