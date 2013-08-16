@@ -23,9 +23,9 @@ Set up the project
 
 <@create_directory_structure_hello/>
 
-### Create a Maven POM
+### Create a Gradle build file
 
-    <@snippet path="pom.xml" prefix="initial"/>
+    <@snippet path="build.gradle" prefix="initial"/>
 
 <@bootstrap_starter_pom_disclaimer/>
 
@@ -119,11 +119,24 @@ For demonstration purposes, there is code to create a `JdbcTemplate`, query the 
 
 <@build_an_executable_jar_subhead/>
 
-<@build_an_executable_jar/>
+<@build_an_executable_jar_with_gradle/>
 
-<@run_the_application_with_maven module="batch job"/>
+<@run_the_application_with_gradle module="batch job"/>
 
 The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
+
+```sh
+Converting (firstName: Jill, lastName: Doe) into (firstName: JILL, lastName: DOE)
+Converting (firstName: Joe, lastName: Doe) into (firstName: JOE, lastName: DOE)
+Converting (firstName: Justin, lastName: Doe) into (firstName: JUSTIN, lastName: DOE)
+Converting (firstName: Jane, lastName: Doe) into (firstName: JANE, lastName: DOE)
+Converting (firstName: John, lastName: Doe) into (firstName: JOHN, lastName: DOE)
+Found <firstName: JILL, lastName: DOE> in the database.
+Found <firstName: JOE, lastName: DOE> in the database.
+Found <firstName: JUSTIN, lastName: DOE> in the database.
+Found <firstName: JANE, lastName: DOE> in the database.
+Found <firstName: JOHN, lastName: DOE> in the database.
+```
 
 
 Summary
