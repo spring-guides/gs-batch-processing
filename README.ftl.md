@@ -23,9 +23,8 @@ Set up the project
 
 <@create_directory_structure_hello/>
 
-### Create a Gradle build file
 
-    <@snippet path="build.gradle" prefix="initial"/>
+<@create_both_builds/>
 
 <@bootstrap_starter_pom_disclaimer/>
 
@@ -119,9 +118,9 @@ For demonstration purposes, there is code to create a `JdbcTemplate`, query the 
 
 <@build_an_executable_jar_subhead/>
 
-<@build_an_executable_jar_with_gradle/>
+<@build_an_executable_jar_with_both/>
 
-<@run_the_application_with_gradle module="batch job"/>
+<@run_the_application_with_both module="batch job"/>
 
 The job prints out a line for each person that gets transformed. After the job runs, you can also see the output from querying the database.
 
