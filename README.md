@@ -81,7 +81,7 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-batch:0.5.0.M4")
+    compile("org.springframework.boot:spring-boot-starter-batch:0.5.0.M5")
     compile("org.hsqldb:hsqldb")
     testCompile("junit:junit:4.11")
 }
