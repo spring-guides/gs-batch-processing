@@ -26,7 +26,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @EnableBatchProcessing
 public class BatchConfiguration {
 
-    // {!begin readerwriterprocessor}
+    // tag::readerwriterprocessor[]
     @Bean
     public ItemReader<Person> reader() {
         FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
@@ -55,9 +55,9 @@ public class BatchConfiguration {
         writer.setDataSource(dataSource);
         return writer;
     }
-    // {!end readerwriterprocessor}
+    // end::readerwriterprocessor[]
 
-    // {!begin jobstep}
+    // tag::jobstep[]
     @Bean
     public Job importUserJob(JobBuilderFactory jobs, Step s1) {
         return jobs.get("importUserJob")
@@ -77,7 +77,7 @@ public class BatchConfiguration {
                 .writer(writer)
                 .build();
     }
-    // {!end jobstep}
+    // end::jobstep[]
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
