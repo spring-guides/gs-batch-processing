@@ -1,5 +1,5 @@
 :spring_boot_version: 0.5.0.M6
-:Component: http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/stereotype/Component.html
+:Component: http://docs.spring.io/spring/docs/4.0.0.RC1/javadoc-api/org/springframework/stereotype/Component.html
 :EnableAutoConfiguration: http://docs.spring.io/spring-boot/docs/{spring_boot_version}/api/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html
 :SpringApplication: http://docs.spring.io/spring-boot/docs/{spring_boot_version}/api/org/springframework/boot/SpringApplication.html
 :toc:
