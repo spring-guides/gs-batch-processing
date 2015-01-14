@@ -24,9 +24,6 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <start-class>hello.Application</start-class>
-    </properties>
 
     <build>
         <plugins>
