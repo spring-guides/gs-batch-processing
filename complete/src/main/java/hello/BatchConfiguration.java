@@ -1,7 +1,5 @@
 package hello;
 
-import java.util.concurrent.CountDownLatch;
-
 import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
@@ -28,16 +26,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
-
-    @Bean
-    public CountDownLatch countDownLatch() {
-        return new CountDownLatch(1);
-    }
-
-    @Bean
-    public JobExecutionListener jobExecutionListener(CountDownLatch countDownLatch) {
-        return new JobCompletionNotificationListener(countDownLatch);
-    }
 
     // tag::readerwriterprocessor[]
     @Bean
