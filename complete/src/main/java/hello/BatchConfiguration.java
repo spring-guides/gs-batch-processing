@@ -1,8 +1,11 @@
 package hello;
 
+import java.util.concurrent.CountDownLatch;
+
 import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -25,6 +28,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
+
+    @Bean
+    public CountDownLatch countDownLatch() {
+        return new CountDownLatch(1);
+    }
+
+    @Bean
+    public JobExecutionListener jobExecutionListener(CountDownLatch countDownLatch) {
+        return new JobCompletionNotificationListener(countDownLatch);
+    }
 
     // tag::readerwriterprocessor[]
     @Bean
@@ -59,9 +72,10 @@ public class BatchConfiguration {
 
     // tag::jobstep[]
     @Bean
-    public Job importUserJob(JobBuilderFactory jobs, Step s1) {
+    public Job importUserJob(JobBuilderFactory jobs, Step s1, JobExecutionListener listener) {
         return jobs.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
+                .listener(listener)
                 .flow(s1)
                 .end()
                 .build();
