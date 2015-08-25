@@ -184,3 +184,6 @@ Congratulations! You built a batch job that ingested data from a spreadsheet, pr
 
 
 
+
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/footer.adoc[]
+
