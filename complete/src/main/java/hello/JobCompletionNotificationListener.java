@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-@Component
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
 	private static final Logger log = LoggerFactory.getLogger(JobCompletionNotificationListener.class);

@@ -9,15 +9,13 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -27,9 +25,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @EnableBatchProcessing
 public class BatchConfiguration {
 
+    @Autowired
+    public JobBuilderFactory jobBuilderFactory;
+
+    @Autowired
+    public StepBuilderFactory stepBuilderFactory;
+
+    @Autowired
+    public DataSource dataSource;
+
     // tag::readerwriterprocessor[]
     @Bean
-    public ItemReader<Person> reader() {
+    public FlatFileItemReader<Person> reader() {
         FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
         reader.setResource(new ClassPathResource("sample-data.csv"));
         reader.setLineMapper(new DefaultLineMapper<Person>() {{
@@ -44,12 +51,12 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public ItemProcessor<Person, Person> processor() {
+    public PersonItemProcessor processor() {
         return new PersonItemProcessor();
     }
 
     @Bean
-    public ItemWriter<Person> writer(DataSource dataSource) {
+    public JdbcBatchItemWriter<Person> writer() {
         JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
         writer.setSql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)");
@@ -58,32 +65,34 @@ public class BatchConfiguration {
     }
     // end::readerwriterprocessor[]
 
+    // tag::listener[]
+
+    @Bean
+    public JobExecutionListener listener() {
+        return new JobCompletionNotificationListener(new JdbcTemplate(dataSource));
+    }
+
+    // end::listener[]
+
     // tag::jobstep[]
     @Bean
-    public Job importUserJob(JobBuilderFactory jobs, Step s1, JobExecutionListener listener) {
-        return jobs.get("importUserJob")
+    public Job importUserJob() {
+        return jobBuilderFactory.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
-                .listener(listener)
-                .flow(s1)
+                .listener(listener())
+                .flow(step1())
                 .end()
                 .build();
     }
 
     @Bean
-    public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<Person> reader,
-            ItemWriter<Person> writer, ItemProcessor<Person, Person> processor) {
+    public Step step1() {
         return stepBuilderFactory.get("step1")
                 .<Person, Person> chunk(10)
-                .reader(reader)
-                .processor(processor)
-                .writer(writer)
+                .reader(reader())
+                .processor(processor())
+                .writer(writer())
                 .build();
     }
     // end::jobstep[]
-
-    @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
 }
