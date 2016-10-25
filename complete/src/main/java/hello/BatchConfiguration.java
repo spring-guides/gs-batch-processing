@@ -65,21 +65,12 @@ public class BatchConfiguration {
     }
     // end::readerwriterprocessor[]
 
-    // tag::listener[]
-
-    @Bean
-    public JobExecutionListener listener() {
-        return new JobCompletionNotificationListener(new JdbcTemplate(dataSource));
-    }
-
-    // end::listener[]
-
     // tag::jobstep[]
     @Bean
-    public Job importUserJob() {
+    public Job importUserJob(JobCompletionNotificationListener listener) {
         return jobBuilderFactory.get("importUserJob")
                 .incrementer(new RunIdIncrementer())
-                .listener(listener())
+                .listener(listener)
                 .flow(step1())
                 .end()
                 .build();

@@ -121,8 +121,6 @@ The first method defines the job and the second one defines a single step. Jobs 
 
 In this job definition, you need an incrementer because jobs use a database to maintain execution state. You then list each step, of which this job has only one step. The job ends, and the Java API produces a perfectly configured job.
 
-The `listener()` method lets you hook into the engine and detect when the job is complete, triggering the verification of results.
-
 In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier. 
 
 NOTE: chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
