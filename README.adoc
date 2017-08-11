@@ -117,11 +117,11 @@ The next chunk focuses on the actual job configuration.
 include::/complete/src/main/java/hello/BatchConfiguration.java[tag=jobstep]
 ----
 .
-The first method defines the job and the second one defines a single step. Jobs are built from steps, where each step can involve a reader, a processor, and a writer. 
+The first method defines the job and the second one defines a single step. Jobs are built from steps, where each step can involve a reader, a processor, and a writer.
 
 In this job definition, you need an incrementer because jobs use a database to maintain execution state. You then list each step, of which this job has only one step. The job ends, and the Java API produces a perfectly configured job.
 
-In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier. 
+In the step definition, you define how much data to write at a time. In this case, it writes up to ten records at a time. Next, you configure the reader, processor, and writer using the injected bits from earlier.
 
 NOTE: chunk() is prefixed `<Person,Person>` because it's a generic method. This represents the input and output types of each "chunk" of processing, and lines up with `ItemReader<Person>` and `ItemWriter<Person>`.
 
@@ -173,6 +173,14 @@ Found <firstName: JOHN, lastName: DOE> in the database.
 
 Congratulations! You built a batch job that ingested data from a spreadsheet, processed it, and wrote it to a database.
 
+== See also
+
+The following guides may also be helpful:
+
+* https://spring.io/guides/gs/spring-boot/[Building an Application with Spring Boot]
+* https://spring.io/guides/gs/accessing-data-gemfire/[Accessing Data with GemFire]
+* https://spring.io/guides/gs/accessing-data-jpa/[Accessing Data with JPA]
+* https://spring.io/guides/gs/accessing-data-mongodb/[Accessing Data with MongoDB]
+* https://spring.io/guides/gs/accessing-data-mysql/[Accessing data with MySQL]
 
 include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/footer.adoc[]
-
