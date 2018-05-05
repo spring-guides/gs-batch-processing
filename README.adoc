@@ -106,9 +106,9 @@ include::/complete/src/main/java/hello/BatchConfiguration.java[tag=readerwriterp
 
 The first chunk of code defines the input, processor, and output.
 
-- `reader()` creates an `ItemReader`. It looks for a file called `sample-data.csv` and parses each line item with enough information to turn it into a `Person`.
-- `processor()` creates an instance of our `PersonItemProcessor` you defined earlier, meant to uppercase the data.
-- `write(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and automatically gets a copy of the dataSource created by `@EnableBatchProcessing`. It includes the SQL statement needed to insert a single `Person` driven by Java bean properties.
+* `reader()` creates an `ItemReader`. It looks for a file called `sample-data.csv` and parses each line item with enough information to turn it into a `Person`.
+* `processor()` creates an instance of our `PersonItemProcessor` you defined earlier, meant to uppercase the data.
+* `write(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and automatically gets a copy of the dataSource created by `@EnableBatchProcessing`. It includes the SQL statement needed to insert a single `Person` driven by Java bean properties.
 
 The next chunk focuses on the actual job configuration.
 
