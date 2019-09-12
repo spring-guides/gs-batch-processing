@@ -1,4 +1,4 @@
-package hello;
+package com.example.batchprocessing;
 
 public class Person {
 
