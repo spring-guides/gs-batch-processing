@@ -126,23 +126,26 @@ is read, sometimes the application's data flow needs a different data type.
 
 Now you need to put together the actual batch job. Spring Batch provides many utility
 classes that reduce the need to write custom code. Instead, you can focus on the business
-logic. The following example, (from
-`src/main/java/com/exampe/batchprocessing/BatchConfiguration.java`) shows how configure a
-batch job:
+logic. 
+
+To configure your job, you must first create a Spring `@Configuration` class like the following example in
+`src/main/java/com/exampe/batchprocessing/BatchConfiguration.java`:
 
 ====
 [source,java]
 ----
-include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[]
+include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=setup]
+
+    ...
+    
+}
 ----
 ====
 
 For starters, the `@EnableBatchProcessing` annotation adds many critical beans that
 support jobs and save you a lot of leg work. This example uses a memory-based database
 (provided by `@EnableBatchProcessing`), meaning that, when it is done, the data is gone.
-The following listing (from
-`src/main/java/com/example/batchprocessing/BatchConfiguration.java`) shows the definition
-of the batch job (the reader, the processor, and the writer):
+Now add the following beans to your `BatchConfiguration` class to define a reader, a processor, and a writer:
 
 ====
 [source,java,indent=0]
@@ -162,7 +165,7 @@ automatically gets a copy of the dataSource created by `@EnableBatchProcessing`.
 includes the SQL statement needed to insert a single `Person`, driven by Java bean
 properties.
 
-The next chunk (from `src/main/java/com/example/batchprocessing/BatchConfiguration.java`)
+The last chunk (from `src/main/java/com/example/batchprocessing/BatchConfiguration.java`)
 shows the actual job configuration:
 
 ====
