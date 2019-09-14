@@ -145,7 +145,7 @@ The following listing (from
 of the batch job (the reader, the processor, and the writer):
 
 ====
-[source,java]
+[source,java,indent=0]
 ----
 include::/complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=readerwriterprocessor]
 ----
