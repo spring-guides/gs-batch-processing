@@ -144,7 +144,7 @@ include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.j
 
 For starters, the `@EnableBatchProcessing` annotation adds many critical beans that
 support jobs and save you a lot of leg work. This example uses a memory-based database
-(provided by `@EnableBatchProcessing`), meaning that, when it is done, the data is gone.
+(provided by `@EnableBatchProcessing`), meaning that, when it is done, the data is gone. It also autowires a couple factories needed further below.
 Now add the following beans to your `BatchConfiguration` class to define a reader, a processor, and a writer:
 
 ====
@@ -169,7 +169,7 @@ The last chunk (from `src/main/java/com/example/batchprocessing/BatchConfigurati
 shows the actual job configuration:
 
 ====
-[source,java]
+[source,java,indent=0]
 ----
 include::/complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=jobstep]
 ----
