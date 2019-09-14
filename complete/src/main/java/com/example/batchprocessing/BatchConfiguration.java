@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+// tag::setup[]
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
@@ -32,6 +33,7 @@ public class BatchConfiguration {
 
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
+    // end::setup[]
 
     // tag::readerwriterprocessor[]
     @Bean
