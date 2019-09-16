@@ -150,7 +150,7 @@ Now add the following beans to your `BatchConfiguration` class to define a reade
 ====
 [source,java,indent=0]
 ----
-include::/complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=readerwriterprocessor]
+include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=readerwriterprocessor]
 ----
 ====
 
@@ -171,7 +171,7 @@ shows the actual job configuration:
 ====
 [source,java,indent=0]
 ----
-include::/complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=jobstep]
+include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=jobstep]
 ----
 ====
 
