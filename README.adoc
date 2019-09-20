@@ -48,6 +48,7 @@ include::initial/src/main/resources/schema-all.sql[]
 
 NOTE: Spring Boot runs `schema-@@platform@@.sql` automatically during startup. `-all` is the default for all platforms.
 
+[[scratch]]
 == Starting with Spring Initializr
 
 For all Spring applications, you should start with the https://start.spring.io[Spring
@@ -126,7 +127,7 @@ is read, sometimes the application's data flow needs a different data type.
 
 Now you need to put together the actual batch job. Spring Batch provides many utility
 classes that reduce the need to write custom code. Instead, you can focus on the business
-logic. 
+logic.
 
 To configure your job, you must first create a Spring `@Configuration` class like the following example in
 `src/main/java/com/exampe/batchprocessing/BatchConfiguration.java`:
@@ -137,7 +138,7 @@ To configure your job, you must first create a Spring `@Configuration` class lik
 include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=setup]
 
     ...
-    
+
 }
 ----
 ====
