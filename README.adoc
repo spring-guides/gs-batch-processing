@@ -90,7 +90,7 @@ represent a row of data, as the following example (from
 `src/main/java/com/example/batchprocessing/Person.java`) shows:
 
 ====
-[source,java]
+[source,java,tabsize=2]
 ----
 include::complete/src/main/java/com/example/batchprocessing/Person.java[]
 ----
@@ -109,7 +109,7 @@ to uppercase. The following listing (from
   so:
 
 ====
-[source,java]
+[source,java,tabsize=2]
 ----
 include::complete/src/main/java/com/example/batchprocessing/PersonItemProcessor.java[]
 ----
@@ -133,7 +133,7 @@ To configure your job, you must first create a Spring `@Configuration` class lik
 `src/main/java/com/exampe/batchprocessing/BatchConfiguration.java`:
 
 ====
-[source,java]
+[source,java,tabsize=2]
 ----
 include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=setup]
 
@@ -149,7 +149,7 @@ support jobs and save you a lot of leg work. This example uses a memory-based da
 Now add the following beans to your `BatchConfiguration` class to define a reader, a processor, and a writer:
 
 ====
-[source,java,indent=0]
+[source,java,tabsize=2,indent=0]
 ----
 include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=readerwriterprocessor]
 ----
@@ -170,7 +170,7 @@ The last chunk (from `src/main/java/com/example/batchprocessing/BatchConfigurati
 shows the actual job configuration:
 
 ====
-[source,java,indent=0]
+[source,java,tabsize=2,indent=0]
 ----
 include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=jobstep]
 ----
@@ -197,7 +197,7 @@ following example (from
 such a class:
 
 ====
-[source,java]
+[source,java,tabsize=2]
 ----
 include::/complete/src/main/java/com/example/batchprocessing/JobCompletionNotificationListener.java[]
 ----
@@ -216,7 +216,7 @@ works without further modification. The folowing listing (from
   application class:
 
 ====
-[source,java]
+[source,java,tabsize=2]
 ----
 include::complete/src/main/java/com/example/batchprocessing/BatchProcessingApplication.java[]
 ----
