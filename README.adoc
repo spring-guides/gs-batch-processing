@@ -185,7 +185,7 @@ ends, and the Java API produces a perfectly configured job.
 
 In the step definition, you define how much data to write at a time. In this case, it
 writes up to ten records at a time. Next, you configure the reader, processor, and writer
-by using the bits injected earlier.
+by using the beans injected earlier.
 
 NOTE: `chunk()` is prefixed `<Person,Person>` because it is a generic method. This
 represents the input and output types of each "`chunk`" of processing and lines up with
