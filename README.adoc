@@ -211,7 +211,7 @@ and then uses `JdbcTemplate` to inspect the results.
 Although batch processing can be embedded in web apps and WAR files, the simpler approach demonstrated below creates a standalone application. You package everything in a single, executable JAR file, driven by a good old Java `main()` method.
 
 The Spring Initializr created an application class for you. For this simple example, it
-works without further modification. The folowing listing (from
+works without further modification. The following listing (from
   `src/main/java/com/example/batchprocessing/BatchProcessingApplication.java`) shows the
   application class:
 
