@@ -161,7 +161,7 @@ The first chunk of code defines the input, processor, and output.
 parses each line item with enough information to turn it into a `Person`.
 * `processor()` creates an instance of the `PersonItemProcessor` that you defined earlier,
 meant to converth the data to upper case.
-* `write(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and
+* `writer(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and
 automatically gets a copy of the dataSource created by `@EnableBatchProcessing`. It
 includes the SQL statement needed to insert a single `Person`, driven by Java bean
 properties.
