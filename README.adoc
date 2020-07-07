@@ -224,6 +224,9 @@ include::complete/src/main/java/com/example/batchprocessing/BatchProcessingAppli
 
 include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/spring-boot-application-new-path.adoc[]
 
+Note that `SpringApplication.exit()` and `System.exit()` ensure that the JVM exits upon job completion.
+See the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-application-exit[Application Exit section in Spring Boot Reference documentation] for more details.
+
 For demonstration purposes, there is code to create a `JdbcTemplate`, query the database,
 and print out the names of people the batch job inserts.
 
