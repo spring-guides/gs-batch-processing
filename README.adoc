@@ -56,6 +56,7 @@ Initializr]. The Initializr offers a fast way to pull in all the dependencies yo
 an application and does a lot of the set up for you. This example needs the Spring Batch
 and HyperSQL Database dependencies.
 
+You can get a Maven build file with the necessary dependencies directly from the https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=batch-processing&name=batch-processing&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.batch-processing&dependencies=batch,hsql[Spring Initializr].
 The following listing shows the `pom.xml` file created when you choose Maven:
 
 ====
@@ -65,6 +66,7 @@ include::complete/pom.xml[]
 ----
 ====
 
+You can get a Gradle build file with the necessary dependencies directly from the https://start.spring.io/#!type=gradle-project&language=java&platformVersion=2.4.2.RELEASE&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=batch-processing&name=batch-processing&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.batch-processing&dependencies=batch,hsql[Spring Initializr].
 The following listing shows the `build.gradle` file created when you choose Gradle:
 
 ====
