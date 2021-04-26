@@ -17,9 +17,9 @@ You will build a service that imports data from a CSV spreadsheet, transforms it
 == What You Need
 
 :java_version: 1.8
-include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/prereq_editor_jdk_buildtools.adoc[]
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/prereq_editor_jdk_buildtools.adoc[]
 
-include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/how_to_complete_this_guide.adoc[]
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/how_to_complete_this_guide.adoc[]
 
 == Business Data
 
@@ -226,7 +226,7 @@ include::complete/src/main/java/com/example/batchprocessing/BatchProcessingAppli
 ----
 ====
 
-include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/spring-boot-application-new-path.adoc[]
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/spring-boot-application-new-path.adoc[]
 
 Note that `SpringApplication.exit()` and `System.exit()` ensure that the JVM exits upon job completion.
 See the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-application-exit[Application Exit section in Spring Boot Reference documentation] for more details.
@@ -234,9 +234,9 @@ See the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#bo
 For demonstration purposes, there is code to create a `JdbcTemplate`, query the database,
 and print out the names of people the batch job inserts.
 
-include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/build_an_executable_jar_subhead.adoc[]
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/build_an_executable_jar_subhead.adoc[]
 
-include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/build_an_executable_jar_with_both.adoc[]
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/build_an_executable_jar_with_both.adoc[]
 
 The job prints out a line for each person that gets transformed. After the job runs, you
 can also see the output from querying the database. It should resemble the following
@@ -273,4 +273,4 @@ The following guides may also be helpful:
 * https://spring.io/guides/gs/accessing-data-mongodb/[Accessing Data with MongoDB]
 * https://spring.io/guides/gs/accessing-data-mysql/[Accessing data with MySQL]
 
-include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/footer.adoc[]
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/footer.adoc[]
