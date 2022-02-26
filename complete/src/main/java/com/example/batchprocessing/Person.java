@@ -2,8 +2,8 @@ package com.example.batchprocessing;
 
 public class Person {
 
-	private String lastName;
 	private String firstName;
+	private String lastName;
 
 	public Person() {
 	}
@@ -13,12 +13,12 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
 	public String getFirstName() {
 		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 	public String getLastName() {
