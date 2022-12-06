@@ -114,22 +114,8 @@ classes that reduce the need to write custom code. Instead, you can focus on the
 logic.
 
 To configure your job, you must first create a Spring `@Configuration` class like the following example in
-`src/main/java/com/exampe/batchprocessing/BatchConfiguration.java`:
-
-====
-[source,java,tabsize=2]
-----
-include::complete/src/main/java/com/example/batchprocessing/BatchConfiguration.java[tag=setup]
-
-    ...
-
-}
-----
-====
-
-For starters, the `@EnableBatchProcessing` annotation adds many critical beans that
-support jobs and save you a lot of leg work. This example uses a memory-based database
-(provided by `@EnableBatchProcessing`), meaning that, when it is done, the data is gone. It also autowires a couple factories needed further below.
+`src/main/java/com/exampe/batchprocessing/BatchConfiguration.java`. This example uses a memory-based database,
+meaning that, when it is done, the data is gone.
 Now add the following beans to your `BatchConfiguration` class to define a reader, a processor, and a writer:
 
 ====
@@ -183,7 +169,7 @@ such a class:
 ====
 [source,java,tabsize=2]
 ----
-include::/complete/src/main/java/com/example/batchprocessing/JobCompletionNotificationListener.java[]
+include::complete/src/main/java/com/example/batchprocessing/JobCompletionNotificationListener.java[]
 ----
 ====
 
