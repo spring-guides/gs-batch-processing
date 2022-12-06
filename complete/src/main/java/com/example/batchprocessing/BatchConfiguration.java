@@ -19,11 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
-// tag::setup[]
 @Configuration
 public class BatchConfiguration {
-
-	// end::setup[]
 
 	// tag::readerwriterprocessor[]
 	@Bean
