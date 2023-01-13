@@ -1,5 +1,5 @@
 :spring_version: current
-:spring_boot_version: 2.3.2.RELEASE
+:spring_boot_version: 3.0.0
 :Component: http://docs.spring.io/spring/docs/{spring_version}/javadoc-api/org/springframework/stereotype/Component.html
 :SpringApplication: http://docs.spring.io/spring-boot/docs/{spring_boot_version}/api/org/springframework/boot/SpringApplication.html
 :toc:
@@ -16,7 +16,6 @@ You will build a service that imports data from a CSV spreadsheet, transforms it
 
 == What You Need
 
-:java_version: 1.8
 include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/prereq_editor_jdk_buildtools.adoc[]
 
 include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/how_to_complete_this_guide.adoc[]
@@ -51,7 +50,7 @@ NOTE: Spring Boot runs `schema-@@platform@@.sql` automatically during startup. `
 [[scratch]]
 == Starting with Spring Initializr
 
-You can use this https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.5.5&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=batch-processing&name=batch-processing&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.batch-processing&dependencies=batch,hsql[pre-initialized project] and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.
+You can use this https://start.spring.io/#!type=maven-project&groupId=com.example&artifactId=batch-processing&name=batch-processing&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.batch-processing&dependencies=batch,hsql[pre-initialized project] and click Generate to download a ZIP file. This project is configured to fit the examples in this tutorial.
 
 To manually initialize the project:
 
