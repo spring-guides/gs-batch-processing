@@ -113,7 +113,7 @@ classes that reduce the need to write custom code. Instead, you can focus on the
 logic.
 
 To configure your job, you must first create a Spring `@Configuration` class like the following example in
-`src/main/java/com/exampe/batchprocessing/BatchConfiguration.java`. This example uses a memory-based database,
+`src/main/java/com/example/batchprocessing/BatchConfiguration.java`. This example uses a memory-based database,
 meaning that, when it is done, the data is gone.
 Now add the following beans to your `BatchConfiguration` class to define a reader, a processor, and a writer:
 
