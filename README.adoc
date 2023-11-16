@@ -195,6 +195,15 @@ See the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#bo
 For demonstration purposes, there is code to create a `JdbcTemplate`, query the database,
 and print out the names of people the batch job inserts.
 
+[NOTE]
+====
+Note how the application does not use the `@EnableBatchProcessing` annotation.
+Previously, `@EnableBatchProcessing` could be used to enable Spring Boot's auto-configuration of Spring Batch.
+Starting from Spring Boot v3.0, this annotation is no longer required and should be removed from applications that want to use Spring Boot's auto-configuration.
+A bean that is annotated with `@EnableBatchProcessing` or that extends Spring Batch's `DefaultBatchConfiguration` can now be defined to tell the auto-configuration
+to back off, allowing the application to take complete control of how Spring Batch is configured.
+====
+
 include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/build_an_executable_jar_subhead.adoc[]
 
 include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/main/build_an_executable_jar_with_both.adoc[]
