@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/initial/"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
+
+  - package-ecosystem: "gradle"
+    directory: "/initial/"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
+
+  - package-ecosystem: "maven"
+    directory: "/complete/"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
+
+  - package-ecosystem: "gradle"
+    directory: "/complete/"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
