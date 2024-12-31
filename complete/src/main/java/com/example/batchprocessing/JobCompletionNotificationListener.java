@@ -23,12 +23,12 @@ public class JobCompletionNotificationListener implements JobExecutionListener {
 
 	@Override
 	public void afterJob(JobExecution jobExecution) {
-		if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
+		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			log.info("!!! JOB FINISHED! Time to verify the results");
 
 			jdbcTemplate
 					.query("SELECT first_name, last_name FROM people", new DataClassRowMapper<>(Person.class))
-					.forEach(person -> log.info("Found <{{}}> in the database.", person));
+					.forEach(person -> log.info("Found <{}> in the database.", person));
 		}
 	}
 }

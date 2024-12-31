@@ -28,11 +28,11 @@ This service pulls in all the dependencies you need for an application and does 
 . Choose either Gradle or Maven and the language you want to use. This guide assumes that you chose Java.
 . Click *Dependencies* and select *Spring Batch* and *HyperSQL Database*.
 . Click *Generate*.
-. Download the resulting ZIP file, which is an archive of a web application that is configured with your choices.
+. Download the resulting ZIP file, which is an archive of an application that is configured with your choices.
 
 NOTE: If your IDE has the Spring Initializr integration, you can complete this process from your IDE.
 
-NOTE: You can also fork the project from Github and open it in your IDE or other editor.
+NOTE: You can also fork the project from GitHub and open it in your IDE or other editor.
 
 [[initial]]
 == Business Data
@@ -125,7 +125,7 @@ parses each line item with enough information to turn it into a `Person`.
 * `processor()` creates an instance of the `PersonItemProcessor` that you defined earlier,
 meant to convert the data to upper case.
 * `writer(DataSource)` creates an `ItemWriter`. This one is aimed at a JDBC destination and
-automatically gets a copy of the dataSource created by Spring Boot. It
+automatically gets a `DataSource` created by Spring Boot. It
 includes the SQL statement needed to insert a single `Person`, driven by Java record components.
 
 The last chunk (from `src/main/java/com/example/batchprocessing/BatchConfiguration.java`)
@@ -188,14 +188,13 @@ include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/
 Note that `SpringApplication.exit()` and `System.exit()` ensure that the JVM exits upon job completion.
 See the https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-application-exit[Application Exit section in Spring Boot Reference documentation] for more details.
 
-For demonstration purposes, there is code to create a `JdbcTemplate`, query the database,
+For demonstration purposes, there is code to inject a `JdbcTemplate`, query the database,
 and print out the names of people the batch job inserts.
 
 [NOTE]
 ====
 Note how the application does not use the `@EnableBatchProcessing` annotation.
 Previously, `@EnableBatchProcessing` could be used to enable Spring Boot's auto-configuration of Spring Batch.
-Starting from Spring Boot v3.0, this annotation is no longer required and should be removed from applications that want to use Spring Boot's auto-configuration.
 A bean that is annotated with `@EnableBatchProcessing` or that extends Spring Batch's `DefaultBatchConfiguration` can now be defined to tell the auto-configuration
 to back off, allowing the application to take complete control of how Spring Batch is configured.
 ====
@@ -216,11 +215,11 @@ Converting (Person[firstName=Joe, lastName=Doe]) into (Person[firstName=JOE, las
 Converting (Person[firstName=Justin, lastName=Doe]) into (Person[firstName=JUSTIN, lastName=DOE])
 Converting (Person[firstName=Jane, lastName=Doe]) into (Person[firstName=JANE, lastName=DOE])
 Converting (Person[firstName=John, lastName=Doe]) into (Person[firstName=JOHN, lastName=DOE])
-Found <{Person[firstName=JILL, lastName=DOE]}> in the database.
-Found <{Person[firstName=JOE, lastName=DOE]}> in the database.
-Found <{Person[firstName=JUSTIN, lastName=DOE]}> in the database.
-Found <{Person[firstName=JANE, lastName=DOE]}> in the database.
-Found <{Person[firstName=JOHN, lastName=DOE]}> in the database.
+Found <Person[firstName=JILL, lastName=DOE]> in the database.
+Found <Person[firstName=JOE, lastName=DOE]> in the database.
+Found <Person[firstName=JUSTIN, lastName=DOE]> in the database.
+Found <Person[firstName=JANE, lastName=DOE]> in the database.
+Found <Person[firstName=JOHN, lastName=DOE]> in the database.
 ----
 ====
 
