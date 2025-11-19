@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.test.JobLauncherTestUtils;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.JobExecution;
+import org.springframework.batch.test.JobOperatorTestUtils;
 import org.springframework.batch.test.JobRepositoryTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 class BatchConfigurationTest {
 
     @Autowired
-    private JobLauncherTestUtils jobLauncherTestUtils;
+    private JobOperatorTestUtils jobOperatorTestUtils;
     @Autowired
     private JobRepositoryTestUtils jobRepositoryTestUtils;
     @Autowired
@@ -36,7 +36,7 @@ class BatchConfigurationTest {
 
     @BeforeEach
     void setUp() {
-        jobLauncherTestUtils.setJob(importUserJob);
+        jobOperatorTestUtils.setJob(importUserJob);
     }
 
     @AfterEach
@@ -46,7 +46,7 @@ class BatchConfigurationTest {
 
     @Test
     void importUserJob_WhenJobEnds_ThenStatusCompleted() throws Exception {
-        JobExecution jobExecution = jobLauncherTestUtils.launchJob();
+        JobExecution jobExecution = jobOperatorTestUtils.startJob();
         Assertions.assertEquals(ExitStatus.COMPLETED, jobExecution.getExitStatus());
     }
 }

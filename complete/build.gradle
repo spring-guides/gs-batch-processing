@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '3.5.3'
+	id 'org.springframework.boot' version '4.0.0-RC2'
 	id 'java'
 }
 
